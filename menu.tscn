@@ -1,0 +1,75 @@
+[gd_scene load_steps=4 format=3 uid="uid://dniry0r343es0"]
+
+[ext_resource type="Theme" uid="uid://dna37blibu61" path="res://dark_default_theme.tres" id="1_46rov"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_sqhhr"]
+keycode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_jqs3k"]
+events = [SubResource("InputEventKey_sqhhr")]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme = ExtResource("1_46rov")
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 5.0
+offset_right = -20.0
+offset_bottom = -628.0
+grow_horizontal = 2
+tab_alignment = 1
+
+[node name="Generation" type="Control" parent="MarginContainer/Panel/TabContainer"]
+custom_minimum_size = Vector2(0, 570)
+layout_mode = 2
+theme = ExtResource("1_46rov")
+
+[node name="GenerateButton" type="Button" parent="MarginContainer/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+tooltip_text = "Generate a new instance based on set parameters."
+theme = ExtResource("1_46rov")
+shortcut = SubResource("Shortcut_jqs3k")
+text = "Generate"
+
+[node name="Assets" type="Control" parent="MarginContainer/Panel/TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Settings" type="Control" parent="MarginContainer/Panel/TabContainer"]
+visible = false
+layout_mode = 2

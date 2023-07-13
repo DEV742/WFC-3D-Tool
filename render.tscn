@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://4w7aek11bxbq"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a52on"]
+sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+
+[sub_resource type="Sky" id="Sky_pwpmh"]
+sky_material = SubResource("ProceduralSkyMaterial_a52on")
+
+[sub_resource type="Environment" id="Environment_tjywt"]
+background_mode = 2
+background_energy_multiplier = 1.5
+sky = SubResource("Sky_pwpmh")
+fog_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_1qy0v"]
+
+[node name="SubViewport" type="SubViewport"]
+size = Vector2i(1920, 1080)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.803275, -0.191206, 0.564083, 0, 0.94707, 0.321026, -0.595608, -0.257872, 0.760758, 2.9957, 1.24395, 2.42291)
+environment = SubResource("Environment_tjywt")
+current = true
+fov = 37.8493
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
+mesh = SubResource("BoxMesh_1qy0v")
