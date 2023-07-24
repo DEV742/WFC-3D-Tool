@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://dna37blibu61"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://dna37blibu61"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tkit1"]
 content_margin_left = 4.0
@@ -75,6 +75,49 @@ corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1i2fy"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_color = Color(0.580392, 0.898039, 0.45098, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 1
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_33p74"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.3)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jyt4b"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_huisx"]
 
@@ -175,6 +218,9 @@ Button/styles/hover = SubResource("StyleBoxFlat_ohari")
 Button/styles/normal = SubResource("StyleBoxFlat_jif5e")
 Button/styles/pressed = SubResource("StyleBoxFlat_wnh14")
 HBoxContainer/styles/RoundedPlane = SubResource("StyleBoxFlat_pjjad")
+ItemList/styles/panel = SubResource("StyleBoxFlat_1i2fy")
+ItemList/styles/selected = SubResource("StyleBoxFlat_33p74")
+LineEdit/styles/normal = SubResource("StyleBoxFlat_jyt4b")
 MarginContainer/styles/Rounded = SubResource("StyleBoxFlat_huisx")
 Panel/styles/panel = SubResource("StyleBoxFlat_mikkp")
 TabContainer/constants/side_margin = 17

@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://4w7aek11bxbq"]
+[gd_scene load_steps=8 format=3 uid="uid://4w7aek11bxbq"]
 
+[ext_resource type="Script" path="res://Grid.gd" id="1_5d733"]
 [ext_resource type="Script" path="res://CamClipper.gd" id="1_cb2cd"]
 [ext_resource type="Script" path="res://Camera.gd" id="1_ntds5"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_1qy0v"]
+[sub_resource type="BoxMesh" id="BoxMesh_uot1c"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a52on"]
 sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
@@ -22,8 +23,14 @@ size = Vector2i(1920, 1080)
 
 [node name="ModelContainer" type="Node3D" parent="."]
 
+[node name="Grid" type="Node3D" parent="ModelContainer"]
+script = ExtResource("1_5d733")
+size_x = 2
+size_y = 2
+size_z = 2
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModelContainer"]
-mesh = SubResource("BoxMesh_1qy0v")
+mesh = SubResource("BoxMesh_uot1c")
 
 [node name="Camroot" type="Node3D" parent="."]
 script = ExtResource("1_ntds5")
