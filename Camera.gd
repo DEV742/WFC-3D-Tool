@@ -1,5 +1,8 @@
 extends Node3D
 
+var camera_pos = Vector3(0.0, 0.0, 5.0)
+var camera_rot
+
 var camera_rotation = Vector2(0.0, 0.0)
 var camera_shift = Vector3(0.0, 0.0, 0.0)
 var free_look_shift = Vector3(0.0, 0.0, 0.0)
@@ -15,10 +18,8 @@ var free_look = false
 var translatedRoot = Vector3(0,0,0)
 var freeLookTranslatedRoot = Vector3(0,0,0)
 
-@onready var cam_col = $h/v/camcollider
 @onready var camera = $h/v/Camera
-@onready var camorigin = $h/v/camorigin
-@onready var freelookcam = $freelook_h/freelook_v/FreeLookCam
+
 
 func translateVector(localNode: Node3D, targetNode: Node3D, shift_vector: Vector3):
 	var translatedVector = Vector3.ZERO
@@ -41,63 +42,53 @@ func _input(event):
 		camera_rotation.x += -event.relative.x * sensitivity.x
 		camera_rotation.y += -event.relative.y * sensitivity.y
 	
-	if Input.is_action_pressed("Right_Mouse"):
+	if Input.is_action_just_pressed("Right_Mouse"):
+		camera_pos = $h.to_global(camera.transform.origin)
+		camera_rot = camera.get_global_rotation_degrees()
+		
+		$h.transform.origin = camera_pos
+		camera.transform.origin.z = 0
+		
+		translatedRoot = camera_pos
 		free_look = true
-		camera.current = false
-		freelookcam.visible = true
-		freelookcam.current = true
+
 	elif Input.is_action_just_released("Right_Mouse"):
-		print("Exiting free look mode")
+		camera_pos = camera.to_global(camera.transform.origin)
 		free_look = false
-		camera.current = true
-		freelookcam.visible = false
-		freelookcam.current = false
+		$h.transform.origin.z = 0
+		camera.transform.origin.z = 5
+		translatedRoot = camera.transform.origin
+		translatedRoot.z = 0
+
+
 	
 	if free_look:
 		if event is InputEventMouseMotion:
-			free_look_rotation.x += -event.relative.x * sensitivity.x
-			free_look_rotation.y += -event.relative.y * sensitivity.y
+			camera_rotation.x += -event.relative.x * sensitivity.x
+			camera_rotation.y += -event.relative.y * sensitivity.y
 		
 	#Camera shift on local XY plane
 	if event is InputEventMouseMotion and Input.is_action_pressed("Middle_Mouse") and not free_look:
 		camera_shift.x = -event.relative.x * sensitivity.x/5
 		camera_shift.y = event.relative.y * sensitivity.y/5
-		translatedRoot = translateVector(camorigin, $h, camera_shift)
+		translatedRoot = translateVector(camera, $h, camera_shift)
 	
 	#Camera zoom
 	if Input.is_action_pressed("Mouse_Wheel_Up"):
 		zoom += 1
-		camorigin.transform.origin.z -= 1
-		cam_col.target_position.z -= 1
 	elif Input.is_action_pressed("Mouse_Wheel_Down"):
 		zoom -= 1
-		camorigin.transform.origin.z += 1
-		cam_col.target_position.z += 1
 	
 	#Camera focus (reset of the origin to [0,0,0])
 	if Input.is_action_pressed("Focus"):
 		translatedRoot = Vector3.ZERO
+		$h.transform.origin = Vector3.ZERO
+		$h/v.transform.origin = Vector3.ZERO
 	
 
 func _physics_process(delta):
-	if cam_col.is_colliding():
-		camera.global_transform.origin = lerp(camera.global_transform.origin, cam_col.get_collision_point(), 0.2)
-	else:
-		camera.global_transform.origin.x = lerp(camera.global_transform.origin.x, camorigin.global_transform.origin.x, delta*lerp_smoothness)
-		camera.global_transform.origin.y = lerp(camera.global_transform.origin.y, camorigin.global_transform.origin.y, delta*lerp_smoothness)
-		camera.global_transform.origin.z = lerp(camera.global_transform.origin.z, camorigin.global_transform.origin.z, delta*lerp_smoothness)
-	
-	$h.transform.origin.x = lerp($h.transform.origin.x, translatedRoot.x, delta * lerp_smoothness)
-	$h.transform.origin.y = lerp($h.transform.origin.y, translatedRoot.y, delta * lerp_smoothness)
-	$h.transform.origin.z = lerp($h.transform.origin.z, translatedRoot.z, delta * lerp_smoothness)
-
 	camera_rotation.y = clamp(camera_rotation.y, cam_vertical_min, cam_vertical_max)
-	
-	$h.rotation_degrees.y = lerp($h.rotation_degrees.y, camera_rotation.x, delta * lerp_smoothness)
-	$h/v.rotation_degrees.x = lerp($h/v.rotation_degrees.x, camera_rotation.y, delta * lerp_smoothness)
-	
 	if free_look:
-		
 		if Input.is_action_pressed("Forward"):
 			free_look_shift.z = -free_look_speed * sensitivity.x/5
 		elif Input.is_action_pressed("Backward"):
@@ -110,13 +101,12 @@ func _physics_process(delta):
 			free_look_shift.x = -free_look_speed * sensitivity.x/5
 		elif Input.is_action_just_released("Left") or Input.is_action_just_released("Right"):
 			free_look_shift.x = 0
-		freeLookTranslatedRoot = translateVector(freelookcam, $freelook_h, free_look_shift)
-		
-		free_look_rotation.y = clamp(free_look_rotation.y, cam_vertical_min, cam_vertical_max)
+		translatedRoot = translateVector(camera, $h, free_look_shift)
 	
-		$freelook_h.rotation_degrees.y = lerp($freelook_h.rotation_degrees.y, free_look_rotation.x, delta * lerp_smoothness)
-		$freelook_h/freelook_v.rotation_degrees.x = lerp($freelook_h/freelook_v.rotation_degrees.x, free_look_rotation.y, delta * lerp_smoothness)
-		
-		$freelook_h.transform.origin.x = lerp($freelook_h.transform.origin.x, freeLookTranslatedRoot.x, delta * lerp_smoothness)
-		$freelook_h.transform.origin.y = lerp($freelook_h.transform.origin.y, freeLookTranslatedRoot.y, delta * lerp_smoothness)
-		$freelook_h.transform.origin.z = lerp($freelook_h.transform.origin.z, freeLookTranslatedRoot.z, delta * lerp_smoothness)
+	$h.rotation_degrees.y = lerp($h.rotation_degrees.y, camera_rotation.x, delta * lerp_smoothness)
+	$h/v.rotation_degrees.x = lerp($h/v.rotation_degrees.x, camera_rotation.y, delta * lerp_smoothness)
+	
+	$h.transform.origin.x = lerp($h.transform.origin.x, translatedRoot.x, delta * lerp_smoothness)
+	$h.transform.origin.y = lerp($h.transform.origin.y, translatedRoot.y, delta * lerp_smoothness)
+	$h.transform.origin.z = lerp($h.transform.origin.z, translatedRoot.z, delta * lerp_smoothness)
+

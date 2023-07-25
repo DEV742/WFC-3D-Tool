@@ -42,18 +42,3 @@ script = ExtResource("1_ntds5")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 environment = SubResource("Environment_tjywt")
 current = true
-
-[node name="camcollider" type="RayCast3D" parent="Camroot/h/v"]
-target_position = Vector3(0, 0, 5)
-debug_shape_custom_color = Color(0.258824, 0.25098, 0.886275, 1)
-debug_shape_thickness = 5
-
-[node name="camorigin" type="Node3D" parent="Camroot/h/v"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-
-[node name="freelook_h" type="Node3D" parent="Camroot"]
-
-[node name="freelook_v" type="Node3D" parent="Camroot/freelook_h"]
-
-[node name="FreeLookCam" type="Camera3D" parent="Camroot/freelook_h/freelook_v"]
-environment = SubResource("Environment_tjywt")
