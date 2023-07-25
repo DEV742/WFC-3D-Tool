@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://hqyxcs8euwg2"]
+
+[ext_resource type="ArrayMesh" uid="uid://mrrseiab4uop" path="res://grid_mesh.res" id="1_qtg4c"]
+
+[node name="grid_outline" type="Node3D"]
+
+[node name="GridBlock" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = ExtResource("1_qtg4c")

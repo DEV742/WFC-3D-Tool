@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dniry0r343es0"]
+[gd_scene load_steps=5 format=3 uid="uid://dniry0r343es0"]
 
 [ext_resource type="Theme" uid="uid://dna37blibu61" path="res://dark_default_theme.tres" id="1_46rov"]
+[ext_resource type="Texture2D" uid="uid://brseh7fadhgfg" path="res://icon.svg" id="2_tv0tk"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_sqhhr"]
 keycode = 32
@@ -37,7 +38,7 @@ anchor_bottom = 1.0
 offset_left = 20.0
 offset_top = 5.0
 offset_right = -20.0
-offset_bottom = -628.0
+offset_bottom = -17.0
 grow_horizontal = 2
 tab_alignment = 1
 
@@ -62,9 +63,256 @@ theme = ExtResource("1_46rov")
 shortcut = SubResource("Shortcut_jqs3k")
 text = "Generate"
 
+[node name="GridSize" type="Label" parent="MarginContainer/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.047
+offset_left = 120.0
+offset_right = -111.0
+offset_bottom = -1.965
+grow_horizontal = 2
+text = "Grid size
+"
+
+[node name="GridSizeX" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.045
+anchor_right = 1.0
+anchor_bottom = 0.097
+offset_left = 10.0
+offset_top = 3.225
+offset_right = -198.0
+offset_bottom = 3.285
+placeholder_text = "X"
+alignment = 1
+
+[node name="GridSizeY" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.097
+offset_left = 104.0
+offset_top = 0.25
+offset_right = -104.0
+offset_bottom = 3.285
+placeholder_text = "Y"
+alignment = 1
+
+[node name="GridSizeZ" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.097
+offset_left = 198.0
+offset_top = 0.25
+offset_right = -10.0
+offset_bottom = 3.285
+placeholder_text = "Z"
+alignment = 1
+
 [node name="Assets" type="Control" parent="MarginContainer/Panel/TabContainer"]
 visible = false
+custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
+theme = ExtResource("1_46rov")
+
+[node name="ItemList" type="ItemList" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.45
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_46rov")
+item_count = 2
+same_column_width = true
+item_0/text = "Test"
+item_0/icon = ExtResource("2_tv0tk")
+item_1/text = "Test1"
+item_1/icon = ExtResource("2_tv0tk")
+
+[node name="SaveButton" type="Button" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Save"
+
+[node name="AddButton" type="Button" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.52
+anchor_right = 1.0
+anchor_bottom = 0.53
+offset_left = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("1_46rov")
+text = "Import"
+
+[node name="NameEdit" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.53
+anchor_right = 1.0
+anchor_bottom = 0.59
+offset_left = 10.0
+offset_top = -0.110016
+offset_right = -10.0
+offset_bottom = -0.110016
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_46rov")
+placeholder_text = "Object name"
+alignment = 1
+
+[node name="WeightEdit" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 0.66
+offset_left = 10.0
+offset_top = 3.05176e-05
+offset_right = -10.0
+offset_bottom = 3.05176e-05
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_46rov")
+placeholder_text = "Weight"
+alignment = 1
+
+[node name="SocketEdit_U" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.716
+anchor_right = 1.0
+anchor_bottom = 0.77
+offset_left = 10.0
+offset_top = -0.120026
+offset_right = -204.0
+offset_bottom = 0.0999756
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_46rov")
+placeholder_text = "U"
+alignment = 1
+
+[node name="SocketEdit_D" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.716
+anchor_right = 1.0
+anchor_bottom = 0.77
+offset_left = 108.0
+offset_top = -0.120026
+offset_right = -106.0
+offset_bottom = 0.0999756
+theme = ExtResource("1_46rov")
+placeholder_text = "D"
+alignment = 1
+
+[node name="SocketEdit_F" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.716
+anchor_right = 1.0
+anchor_bottom = 0.77
+offset_left = 204.0
+offset_top = -0.120026
+offset_right = -10.0
+offset_bottom = 0.0999756
+theme = ExtResource("1_46rov")
+placeholder_text = "F"
+alignment = 1
+
+[node name="SocketEdit_B" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.782
+anchor_right = 1.0
+anchor_bottom = 0.837
+offset_left = 10.0
+offset_top = 0.259949
+offset_right = -204.0
+offset_bottom = -0.0899963
+theme = ExtResource("1_46rov")
+placeholder_text = "B"
+alignment = 1
+
+[node name="SocketEdit_L" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.782
+anchor_right = 1.0
+anchor_bottom = 0.837
+offset_left = 108.0
+offset_top = 0.259949
+offset_right = -106.0
+offset_bottom = -0.0899963
+theme = ExtResource("1_46rov")
+placeholder_text = "L"
+alignment = 1
+
+[node name="SocketEdit_R" type="LineEdit" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.782
+anchor_right = 1.0
+anchor_bottom = 0.837
+offset_left = 204.0
+offset_top = 0.259949
+offset_right = -10.0
+offset_bottom = -0.0899963
+theme = ExtResource("1_46rov")
+placeholder_text = "R"
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.67
+anchor_right = 1.0
+anchor_bottom = 0.716
+offset_left = 120.0
+offset_top = 0.0999756
+offset_right = -119.0
+offset_bottom = -0.120026
+text = "Sockets"
+
+[node name="FileLabel" type="Label" parent="MarginContainer/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.858
+anchor_right = 1.0
+anchor_bottom = 0.904
+offset_left = 10.0
+offset_top = -0.0600281
+offset_right = -190.0
+offset_bottom = -0.280029
+text = "Selected file:"
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/Panel/TabContainer/Assets"]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(500, 500)
+theme = ExtResource("1_46rov")
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray(".blend", ".obj")
+show_hidden_files = true
 
 [node name="Settings" type="Control" parent="MarginContainer/Panel/TabContainer"]
 visible = false
