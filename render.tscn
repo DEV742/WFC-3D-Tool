@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://4w7aek11bxbq"]
+[gd_scene load_steps=7 format=3 uid="uid://4w7aek11bxbq"]
 
 [ext_resource type="Script" path="res://Grid.gd" id="1_5d733"]
-[ext_resource type="Script" path="res://CamClipper.gd" id="1_cb2cd"]
 [ext_resource type="Script" path="res://Camera.gd" id="1_ntds5"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uot1c"]
@@ -36,7 +35,6 @@ mesh = SubResource("BoxMesh_uot1c")
 script = ExtResource("1_ntds5")
 
 [node name="h" type="Node3D" parent="Camroot"]
-script = ExtResource("1_cb2cd")
 
 [node name="v" type="Node3D" parent="Camroot/h"]
 
@@ -44,7 +42,6 @@ script = ExtResource("1_cb2cd")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 environment = SubResource("Environment_tjywt")
 current = true
-fov = 37.8493
 
 [node name="camcollider" type="RayCast3D" parent="Camroot/h/v"]
 target_position = Vector3(0, 0, 5)
@@ -53,3 +50,10 @@ debug_shape_thickness = 5
 
 [node name="camorigin" type="Node3D" parent="Camroot/h/v"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="freelook_h" type="Node3D" parent="Camroot"]
+
+[node name="freelook_v" type="Node3D" parent="Camroot/freelook_h"]
+
+[node name="FreeLookCam" type="Camera3D" parent="Camroot/freelook_h/freelook_v"]
+environment = SubResource("Environment_tjywt")
