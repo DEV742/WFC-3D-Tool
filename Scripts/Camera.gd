@@ -13,7 +13,7 @@ var free_look_speed = 1
 var cam_vertical_max = 75.0
 var cam_vertical_min = -55.0
 var lerp_smoothness = 10
-var zoom = 0.0
+var zoom = 5.0
 var free_look = false
 var translatedRoot = Vector3(0,0,0)
 var freeLookTranslatedRoot = Vector3(0,0,0)
@@ -39,7 +39,7 @@ func translateVector(localNode: Node3D, targetNode: Node3D, shift_vector: Vector
 func _input(event):
 	#Camera rotation around origin
 	if event is InputEventMouseMotion and Input.is_action_pressed("Left_Mouse"):
-		camera_rotation.x += -event.relative.x * sensitivity.x
+		camera_rotation.x = -event.relative.x * sensitivity.x * 5
 		camera_rotation.y += -event.relative.y * sensitivity.y
 	
 	if Input.is_action_just_pressed("Right_Mouse"):
@@ -47,16 +47,17 @@ func _input(event):
 		camera_rot = camera.get_global_rotation_degrees()
 		
 		$h.transform.origin = camera_pos
-		camera.transform.origin.z = 0
-		
+		camera.transform.origin.z = 0.0
+		zoom = 0.0
 		translatedRoot = camera_pos
 		free_look = true
 
 	elif Input.is_action_just_released("Right_Mouse"):
 		camera_pos = camera.to_global(camera.transform.origin)
 		free_look = false
+		zoom = 5.0
 		$h.transform.origin.z = 0
-		camera.transform.origin.z = 5
+		camera.transform.origin.z = 5.0
 		translatedRoot = camera.transform.origin
 		translatedRoot.z = 0
 
@@ -75,18 +76,20 @@ func _input(event):
 	
 	#Camera zoom
 	if Input.is_action_pressed("Mouse_Wheel_Up"):
-		zoom += 1
+		zoom -= 1.0
 	elif Input.is_action_pressed("Mouse_Wheel_Down"):
-		zoom -= 1
+		zoom += 1.0
+		if zoom < 0.0:
+			zoom = 0.0
 	
 	#Camera focus (reset of the origin to [0,0,0])
 	if Input.is_action_pressed("Focus"):
 		translatedRoot = Vector3.ZERO
-		$h.transform.origin = Vector3.ZERO
-		$h/v.transform.origin = Vector3.ZERO
+		zoom = 5.0
 	
 
 func _physics_process(delta):
+	#print(camera_rotation)
 	camera_rotation.y = clamp(camera_rotation.y, cam_vertical_min, cam_vertical_max)
 	if free_look:
 		if Input.is_action_pressed("Forward"):
@@ -103,10 +106,22 @@ func _physics_process(delta):
 			free_look_shift.x = 0
 		translatedRoot = translateVector(camera, $h, free_look_shift)
 	
-	$h.rotation_degrees.y = lerp($h.rotation_degrees.y, camera_rotation.x, delta * lerp_smoothness)
+	#$h.rotation_degrees.y = lerp($h.rotation_degrees.y, camera_rotation.x, delta * lerp_smoothness)
+	#$h.transform.basis = Basis() # reset rotation
+	#$h.rotate_y(deg_to_rad(lerp($h.rotation_degrees.y, camera_rotation.x, delta*lerp_smoothness))) # first rotate in Y
 	$h/v.rotation_degrees.x = lerp($h/v.rotation_degrees.x, camera_rotation.y, delta * lerp_smoothness)
-	
+
+	# Interpolate using spherical-linear interpolation (SLERP).
+	var quat = Quaternion($h.transform.basis).slerp($h.transform.basis.rotated(Vector3(0,1,0), deg_to_rad(camera_rotation.x)), delta*lerp_smoothness) # find halfway point between a and b
+	#$h.rotate_y(deg_to_rad(camera_rotation.x)) # first rotate in Y
+	# Apply back
+	camera_rotation.x = lerp (camera_rotation.x, 0.0, delta * lerp_smoothness)
+	$h.transform.basis = Basis(quat)
+
+
 	$h.transform.origin.x = lerp($h.transform.origin.x, translatedRoot.x, delta * lerp_smoothness)
 	$h.transform.origin.y = lerp($h.transform.origin.y, translatedRoot.y, delta * lerp_smoothness)
 	$h.transform.origin.z = lerp($h.transform.origin.z, translatedRoot.z, delta * lerp_smoothness)
+
+	camera.transform.origin.z = lerp(camera.transform.origin.z, zoom, delta * lerp_smoothness)
 
