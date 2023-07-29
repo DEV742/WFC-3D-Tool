@@ -1,12 +1,15 @@
 extends Node3D
 
-@export var block_name : String
-@export var mesh : MeshInstance3D
-@export var weight : int
+class_name AssetBlock
+
+var asset_name : String
+var weight : int
+var thumbnail : ImageTexture
+var path : String
+var scene : Node
 
 #Format: [U, D, F, B, L, R]
-@export var sockets = {"U":"", "D":"", "F":"", "B":"", "L":"", "R":""}
-
+var sockets = {"U":"", "D":"", "F":"", "B":"", "L":"", "R":""}
 
 
 #TODO
