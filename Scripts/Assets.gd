@@ -9,6 +9,8 @@ var main_camera
 
 var assets = {}
 
+var selected_asset: AssetBlock
+
 var generated_node
 #Settings fields
 @onready var asset_name = $NameEdit
@@ -70,7 +72,7 @@ func _on_import_save_button_pressed():
 	var tex = ImageTexture.create_from_image(img)
 	exit_demo.emit()
 	settings_popup.hide()
-	var socket_values : Dictionary
+	var socket_values = {}
 	for socket_key in model_sockets.keys():
 		socket_values[socket_key] = model_sockets[socket_key].text
 	var asset = AssetBlock.new()
@@ -93,7 +95,41 @@ func _on_import_save_button_pressed():
 func _on_item_list_item_selected(index):
 	print(item_list.get_item_text(index))
 	var selected = assets[item_list.get_item_text(index)]
+	selected_asset = selected
 	asset_name.set_text(selected.asset_name)
 	asset_weight.set_text(str(selected.weight))
 	for socket_key in asset_sockets.keys():
 		asset_sockets[socket_key].set_text(selected.sockets[socket_key])
+
+
+func _on_save_button_pressed():
+	var old_name = selected_asset.asset_name
+	selected_asset.asset_name = asset_name.text
+	selected_asset.weight = asset_weight.text
+	var new_sockets = {}
+	for key in asset_sockets.keys():
+		new_sockets[key] = asset_sockets[key].text
+	selected_asset.sockets = new_sockets
+	selected_asset.scene.set_meta("name", selected_asset.asset_name)
+	selected_asset.scene.set_meta("thumbnail", selected_asset.thumbnail.get_image().get_data())
+	selected_asset.scene.set_meta("weight", selected_asset.weight)
+	selected_asset.scene.set_meta("sockets", selected_asset.sockets)
+	if old_name != selected_asset.asset_name:
+		FileWorker.rename_scene(old_name, selected_asset.asset_name)
+	FileWorker.save_scene(selected_asset.asset_name, selected_asset.scene)
+	#reload scenes?
+	reload_item_list()
+	for i in range(0, item_list.item_count):
+		if item_list.get_item_text(i) == selected_asset.asset_name:
+			item_list.select(i)
+	#FileWorker.delete_scene(old_name)
+
+func reload_item_list():
+	item_list.clear()
+	assets = FileWorker.load_scenes()
+	for scene_name in assets.keys():
+		item_list.add_item(scene_name, assets[scene_name].thumbnail)
+
+
+func _on_delete_button_pressed():
+	pass # Replace with function body.

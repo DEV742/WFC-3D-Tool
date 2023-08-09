@@ -136,7 +136,7 @@ same_column_width = true
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.748
 anchor_bottom = 1.0
 offset_left = 10.0
 offset_right = -10.0
@@ -144,6 +144,20 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Save"
+
+[node name="DeleteButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.698
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Delete"
 
 [node name="AddButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
@@ -424,8 +438,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 496.0
-offset_bottom = 566.0
+offset_right = -4.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -609,6 +623,8 @@ visible = false
 layout_mode = 2
 
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_selected"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SaveButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_save_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/DeleteButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_delete_button_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/AddButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_add_button_pressed"]
 [connection signal="file_selected" from="MainMenu/Panel/TabContainer/Assets/FileDialog" to="MainMenu/Panel/TabContainer/Assets" method="_on_file_dialog_file_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/SaveButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_import_save_button_pressed"]

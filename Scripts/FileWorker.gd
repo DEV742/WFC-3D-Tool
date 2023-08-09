@@ -25,6 +25,24 @@ static func save_scene(scene_name: String, scene: Node) -> String:
 		return ""
 	return path
 
+static func delete_scene(scene_name: String) -> bool:
+	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	var err = DirAccess.remove_absolute(path)
+	if err == OK:
+		return true
+	else:
+		return false
+
+static func rename_scene(scene_to_rename: String, new_scene_name: String) -> bool:
+	var path = "res://Scenes/Assets/" + scene_to_rename + ".tscn"
+	var path_new = "res://Scenes/Assets/" + new_scene_name + ".tscn"
+	var err = DirAccess.rename_absolute(path, path_new)
+	
+	if err == OK:
+		return true
+	else:
+		return false
+
 static func load_scenes() -> Dictionary:
 	var list = get_assets_list()
 	
