@@ -84,3 +84,9 @@ static func load_scene(scene_name : String) -> Node:
 	var node = load(path).instantiate()
 	return node
 
+static func scene_exists(scene_name : String) -> bool:
+	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	if FileAccess.file_exists(path):
+		return true
+	else:
+		return false
