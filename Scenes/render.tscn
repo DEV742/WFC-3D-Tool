@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://4w7aek11bxbq"]
 
-[ext_resource type="Script" path="res://Grid.gd" id="1_5d733"]
-[ext_resource type="Script" path="res://Camera.gd" id="1_ntds5"]
+[ext_resource type="Script" path="res://Scripts/Grid.gd" id="1_fcnaj"]
+[ext_resource type="Script" path="res://Scripts/Camera.gd" id="2_53gn7"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uot1c"]
 
@@ -23,16 +23,27 @@ size = Vector2i(1920, 1080)
 [node name="ModelContainer" type="Node3D" parent="."]
 
 [node name="Grid" type="Node3D" parent="ModelContainer"]
-script = ExtResource("1_5d733")
+script = ExtResource("1_fcnaj")
 size_x = 2
 size_y = 2
 size_z = 2
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModelContainer"]
+visible = false
 mesh = SubResource("BoxMesh_uot1c")
 
+[node name="DemoModelContainer" type="Node3D" parent="ModelContainer"]
+
+[node name="Thumbnail" type="SubViewport" parent="ModelContainer/DemoModelContainer"]
+render_target_update_mode = 4
+
+[node name="ThumbnailCamera" type="Camera3D" parent="ModelContainer/DemoModelContainer/Thumbnail"]
+transform = Transform3D(0.707107, -0.413628, 0.573509, 0, 0.811064, 0.584958, -0.707107, -0.413628, 0.573509, 1, 1, 1)
+environment = SubResource("Environment_tjywt")
+current = true
+
 [node name="Camroot" type="Node3D" parent="."]
-script = ExtResource("1_ntds5")
+script = ExtResource("2_53gn7")
 
 [node name="h" type="Node3D" parent="Camroot"]
 
