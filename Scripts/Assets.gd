@@ -31,6 +31,7 @@ var generated_node
 
 var changes_made = false
 var clicked_idx : int
+var previous_clicked_idx : int
 
 #Importer fields
 @onready var model_name = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/AssetNameEdit
@@ -50,6 +51,7 @@ signal exit_demo
 signal set_demo_model(model : Node3D)
 
 func _ready():
+	previous_clicked_idx = -1
 	var root_node = get_tree().get_root().get_child(0)
 	thumb_camera = root_node.find_child("ThumbnailCamera")
 	main_camera = root_node.find_child("Camera")
@@ -130,6 +132,12 @@ func load_asset_data(index):
 		asset_sockets[socket_key].set_text(selected.sockets[socket_key])
 
 func _on_save_button_pressed():
+	if selected_asset == null:
+		print("no asset selected!")
+		return
+	if FileWorker.scene_exists(asset_name.text) and selected_asset.asset_name != asset_name.text:
+		name_taken_dialog.visible = true
+		return
 	save_asset()
 
 func save_asset():
@@ -153,6 +161,7 @@ func save_asset():
 		if item_list.get_item_text(i) == selected_asset.asset_name:
 			item_list.select(i)
 	changes_made = false
+	previous_clicked_idx = -1
 	
 func reload_item_list():
 	item_list.clear()
@@ -170,54 +179,63 @@ func _on_asset_importer_close_requested():
 	settings_popup.visible = false
 
 
-func _on_name_edit_text_changed(new_text):
+func _on_name_edit_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_weight_edit_text_changed(new_text):
+func _on_weight_edit_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_u_text_changed(new_text):
+func _on_socket_edit_u_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_d_text_changed(new_text):
+func _on_socket_edit_d_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_f_text_changed(new_text):
+func _on_socket_edit_f_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_b_text_changed(new_text):
+func _on_socket_edit_b_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_l_text_changed(new_text):
+func _on_socket_edit_l_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_socket_edit_r_text_changed(new_text):
+func _on_socket_edit_r_text_changed(_new_text):
 	changes_made = true
 
 
-func _on_item_list_item_clicked(index, at_position, mouse_button_index):
-	clicked_idx = index
+func _on_item_list_item_clicked(index, _at_position, _mouse_button_index):
 	if changes_made:
 		not_saved_dialog.visible = true
-
+		if previous_clicked_idx == -1:
+			previous_clicked_idx = clicked_idx
+	clicked_idx = index
 
 func _on_not_saved_dialog_canceled():
 	load_asset_data(clicked_idx)
 	changes_made = false
+	previous_clicked_idx = -1
 
 
 func _on_not_saved_dialog_confirmed():
+	if FileWorker.scene_exists(asset_name.text) and selected_asset.asset_name != asset_name.text:
+		name_taken_dialog.visible = true
+		item_list.select(previous_clicked_idx)
+		return
 	save_asset()
 
 
 func _on_delete_dialog_confirmed():
+	if selected_asset == null:
+		print("no asset selected")
+		return
 	var scene_name = selected_asset.asset_name
 	FileWorker.delete_scene(scene_name)
 	item_list.clear()

@@ -428,6 +428,7 @@ show_hidden_files = true
 title = "Asset import"
 initial_position = 2
 size = Vector2i(500, 570)
+visible = false
 exclusive = true
 unresizable = true
 always_on_top = true
@@ -457,7 +458,7 @@ grow_horizontal = 2
 [node name="SubViewport" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/PreviewContainer" instance=ExtResource("4_sa1rd")]
 handle_input_locally = false
 size = Vector2i(400, 225)
-render_target_update_mode = 4
+render_target_update_mode = 0
 
 [node name="SaveButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel"]
 layout_mode = 1
