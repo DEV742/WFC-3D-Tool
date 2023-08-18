@@ -7,10 +7,8 @@ extends Node
 @onready var thumbnail_camera = $SubViewportContainer/SubViewport/ModelContainer/DemoModelContainer/Thumbnail/ThumbnailCamera
 
 
-
 #This variable enables the model import preview
 var model_demo_mode = false
-
 
 func _enter_demo_mode():
 	model_demo_mode = true
@@ -27,3 +25,4 @@ func _exit_demo_mode():
 	model_demo_mode = false
 	grid.visible = true
 	blur_layer.visible = false
+	
