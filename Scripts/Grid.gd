@@ -8,10 +8,6 @@ var grid_outline = preload("res://Scenes/grid_outline.tscn")
 
 var grid : Dictionary
 
-func _ready():
-	create_grid()
-
-
 func create_grid():
 	for x in range(size_x):
 		for y in range(size_y):
@@ -26,8 +22,12 @@ func create_grid():
 func clear_grid():
 	for key in grid.keys():
 				grid[key].queue_free()
+	grid.clear()
 
 
-func update_grid():
+func update_grid(x : int, y : int, z : int):
+	size_x = x
+	size_y = y
+	size_z = z
 	clear_grid()
 	create_grid()

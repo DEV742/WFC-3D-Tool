@@ -17,6 +17,7 @@ var generated_node
 @onready var field_dialog = $FieldDialog
 @onready var name_taken_dialog = $NameTakenDialog
 @onready var not_saved_dialog = $NotSavedDialog
+@onready var socket_creator_dialog = $SocketCreator
 #Settings fields
 @onready var asset_name = $NameEdit
 @onready var asset_weight = $WeightEdit
@@ -32,6 +33,7 @@ var generated_node
 var changes_made = false
 var clicked_idx : int
 var previous_clicked_idx : int
+var previous_edit_string = ""
 
 #Importer fields
 @onready var model_name = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/AssetNameEdit
@@ -238,7 +240,80 @@ func _on_delete_dialog_confirmed():
 		return
 	var scene_name = selected_asset.asset_name
 	FileWorker.delete_scene(scene_name)
+	#delete this item from all item sockets?
 	item_list.clear()
 	assets = FileWorker.load_scenes()
 	for key in assets.keys():
 		item_list.add_item(key, assets[key].thumbnail)
+
+func init_socket_creator(socket : String, sockets_list : Dictionary):
+	previous_edit_string = sockets_list[socket].text
+	socket_creator_dialog.init_list(assets, sockets_list[socket])
+	socket_creator_dialog.visible = true
+	socket_creator_dialog.socket_key = socket
+
+func _on_socket_edit_u_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("U", asset_sockets)
+
+func _on_socket_edit_d_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("D", asset_sockets)
+
+
+func _on_socket_edit_f_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("F", asset_sockets)
+
+
+func _on_socket_edit_b_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("B", asset_sockets)
+
+
+func _on_socket_edit_l_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("L", asset_sockets)
+
+
+func _on_socket_edit_r_focus_entered():
+	if selected_asset == null:
+		print("no asset selected")
+		return
+	init_socket_creator("R", asset_sockets)
+
+
+
+
+func _asset_importer_socket_U_focus():
+	init_socket_creator("U", model_sockets)
+
+
+func _asset_importer_socket_D_focus():
+	init_socket_creator("D", model_sockets)
+
+
+func _asset_importer_socket_F_focus():
+	init_socket_creator("F", model_sockets)
+
+
+func _asset_importer_socket_B_focus():
+	init_socket_creator("B", model_sockets)
+
+
+func _asset_importer_socket_R_focus():
+	init_socket_creator("R", model_sockets)
+
+
+func _asset_importer_socket_L_focus():
+	init_socket_creator("L", model_sockets)
