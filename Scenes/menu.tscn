@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dgpss1cilthug"]
+[gd_scene load_steps=8 format=3 uid="uid://dniry0r343es0"]
 
 [ext_resource type="Theme" uid="uid://dna37blibu61" path="res://Themes/dark_default_theme.tres" id="1_dsxom"]
-[ext_resource type="Script" path="res://Scenes/Generation.gd" id="2_0c7ds"]
 [ext_resource type="Script" path="res://Scripts/Assets.gd" id="2_27f4q"]
-[ext_resource type="PackedScene" uid="uid://g3ijwfms4ixu" path="res://Scenes/render.tscn" id="4_sa1rd"]
-[ext_resource type="Script" path="res://Scenes/SocketCreator.gd" id="5_ixrfm"]
+[ext_resource type="Script" path="res://Scripts/Generation.gd" id="2_lipvx"]
+[ext_resource type="PackedScene" path="res://Scenes/render.tscn" id="4_sa1rd"]
+[ext_resource type="Script" path="res://Scripts/SocketCreator.gd" id="5_1m84e"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_sqhhr"]
 keycode = 32
@@ -49,7 +49,7 @@ tab_alignment = 1
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
-script = ExtResource("2_0c7ds")
+script = ExtResource("2_lipvx")
 
 [node name="GenerateButton" type="Button" parent="MainMenu/Panel/TabContainer/Generation"]
 layout_mode = 1
@@ -147,7 +147,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Select all"
 
-[node name="SelectAllButton2" type="Button" parent="MainMenu/Panel/TabContainer/Generation"]
+[node name="DeselectAllButton" type="Button" parent="MainMenu/Panel/TabContainer/Generation"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.04
@@ -734,11 +734,12 @@ cancel_button_text = "Revert"
 title = "Socket Creator"
 initial_position = 2
 size = Vector2i(500, 500)
+visible = false
 exclusive = true
 unresizable = true
 always_on_top = true
 theme = ExtResource("1_dsxom")
-script = ExtResource("5_ixrfm")
+script = ExtResource("5_1m84e")
 
 [node name="MarginContainer" type="MarginContainer" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator"]
 custom_minimum_size = Vector2(500, 500)
@@ -794,9 +795,13 @@ text = "String:"
 visible = false
 layout_mode = 2
 
+[connection signal="tab_changed" from="MainMenu/Panel/TabContainer" to="MainMenu/Panel/TabContainer/Generation" method="_on_tab_container_tab_changed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/GenerateButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_generate_button_pressed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeX" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_x_text_changed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeY" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_y_text_changed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeZ" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_z_text_changed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/SelectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_select_all_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/DeselectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_deselect_all_button_pressed"]
 [connection signal="item_clicked" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SaveButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_save_button_pressed"]

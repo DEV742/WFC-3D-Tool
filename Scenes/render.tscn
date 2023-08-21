@@ -1,20 +1,22 @@
-[gd_scene load_steps=7 format=3 uid="uid://g3ijwfms4ixu"]
+[gd_scene load_steps=9 format=3 uid="uid://g3ijwfms4ixu"]
 
 [ext_resource type="Script" path="res://Scripts/Grid.gd" id="1_fcnaj"]
+[ext_resource type="Texture2D" uid="uid://bd6akxabxc826" path="res://Util/background.png" id="1_t06ts"]
 [ext_resource type="Script" path="res://Scripts/Camera.gd" id="2_53gn7"]
+[ext_resource type="Environment" uid="uid://twk1ojdc2ooh" path="res://Util/env.tres" id="3_8vt8l"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uot1c"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a52on"]
-sky_top_color = Color(0.384314, 0.454902, 0.54902, 1)
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_s43wq"]
+panorama = ExtResource("1_t06ts")
 
-[sub_resource type="Sky" id="Sky_pwpmh"]
-sky_material = SubResource("ProceduralSkyMaterial_a52on")
+[sub_resource type="Sky" id="Sky_w5vwy"]
+sky_material = SubResource("PanoramaSkyMaterial_s43wq")
 
 [sub_resource type="Environment" id="Environment_tjywt"]
-background_mode = 2
-background_energy_multiplier = 1.5
-sky = SubResource("Sky_pwpmh")
+sky = SubResource("Sky_w5vwy")
+ambient_light_source = 3
+reflected_light_source = 2
 fog_enabled = true
 
 [node name="SubViewport" type="SubViewport"]
@@ -26,12 +28,13 @@ size = Vector2i(1920, 1080)
 script = ExtResource("1_fcnaj")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModelContainer"]
-visible = false
 mesh = SubResource("BoxMesh_uot1c")
 
 [node name="DemoModelContainer" type="Node3D" parent="ModelContainer"]
+visible = false
 
 [node name="Thumbnail" type="SubViewport" parent="ModelContainer/DemoModelContainer"]
+transparent_bg = true
 render_target_update_mode = 4
 
 [node name="ThumbnailCamera" type="Camera3D" parent="ModelContainer/DemoModelContainer/Thumbnail"]
@@ -48,5 +51,5 @@ script = ExtResource("2_53gn7")
 
 [node name="Camera" type="Camera3D" parent="Camroot/h/v"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
-environment = SubResource("Environment_tjywt")
+environment = ExtResource("3_8vt8l")
 current = true

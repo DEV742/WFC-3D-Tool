@@ -17,6 +17,7 @@ func init_list(list : Dictionary, target_edit : LineEdit):
 	socket_list.clear()
 	for key in list.keys():
 		socket_list.add_item(key, list[key].thumbnail)
+	socket_list.add_item("Empty")
 	socket_list.deselect_all()
 	socket_text.text = "String:"
 	#select the items present in the socket
@@ -34,7 +35,10 @@ func _on_item_list_multi_selected(_index, _selected):
 	var idx = socket_list.get_selected_items()
 	var array = []
 	for id in idx:
-		array.append(socket_list.get_item_text(id))
+		if socket_list.get_item_text(id) != "Empty":
+			array.append(socket_list.get_item_text(id))
+		elif array.size() == 0:
+			array.append("")
 	var str_json = JSON.stringify(array)
 	socket_string = str_json
 	print(str_json)
