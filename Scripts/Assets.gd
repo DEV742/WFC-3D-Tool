@@ -62,8 +62,9 @@ func _ready():
 	self.set_demo_model.connect(root_node._set_demo_model)
 	print(FileWorker.get_assets_list())
 	assets = FileWorker.load_scenes()
-	for scene_name in assets.keys():
-		item_list.add_item(scene_name, assets[scene_name].thumbnail)
+	if not assets.is_empty():
+		for scene_name in assets.keys():
+			item_list.add_item(scene_name, assets[scene_name].thumbnail)
 	
 func _on_file_dialog_file_selected(path):
 	generated_node = FileWorker.load_gltf(path)

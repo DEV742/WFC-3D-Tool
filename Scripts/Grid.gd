@@ -17,13 +17,12 @@ func create_grid():
 				object.position = key
 				add_child(object)
 				grid[key] = object
-
+				
 
 func clear_grid():
 	for key in grid.keys():
 				grid[key].queue_free()
 	grid.clear()
-
 
 func update_grid(x : int, y : int, z : int):
 	size_x = x
@@ -31,3 +30,4 @@ func update_grid(x : int, y : int, z : int):
 	size_z = z
 	clear_grid()
 	create_grid()
+

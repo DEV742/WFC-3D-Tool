@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/Grid.gd" id="1_fcnaj"]
 [ext_resource type="Texture2D" uid="uid://bd6akxabxc826" path="res://Util/background.png" id="1_t06ts"]
 [ext_resource type="Script" path="res://Scripts/Camera.gd" id="2_53gn7"]
-[ext_resource type="Environment" uid="uid://twk1ojdc2ooh" path="res://Util/env.tres" id="3_8vt8l"]
+[ext_resource type="Environment" uid="uid://85pwpsv5ii3" path="res://Util/env.tres" id="3_8vt8l"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_uot1c"]
 
@@ -28,6 +28,7 @@ size = Vector2i(1920, 1080)
 script = ExtResource("1_fcnaj")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="ModelContainer"]
+visible = false
 mesh = SubResource("BoxMesh_uot1c")
 
 [node name="DemoModelContainer" type="Node3D" parent="ModelContainer"]

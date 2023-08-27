@@ -7,16 +7,17 @@ var grid_y = 0
 var grid_z = 0
 
 var assets : Dictionary
-
+var grid_controller
 @onready var used_items_list = $UsedAssets 
 
 func _ready():
 	var root_node = get_tree().get_root().get_child(0)
-	var grid_controller = root_node.find_child("Grid")
+	grid_controller = root_node.find_child("Grid")
 	self._update_grid.connect(grid_controller.update_grid)
 	assets = FileWorker.load_scenes()
-	for scene_name in assets.keys():
-		used_items_list.add_item(scene_name, assets[scene_name].thumbnail)
+	if not assets.is_empty():
+		for scene_name in assets.keys():
+			used_items_list.add_item(scene_name, assets[scene_name].thumbnail)
 
 
 func _on_grid_size_x_text_changed(new_text):
@@ -50,4 +51,15 @@ func _on_tab_container_tab_changed(_tab):
 
 func _on_generate_button_pressed():
 	var selected_items = used_items_list.get_selected_items()
-	#call the wfc func here
+	var pool = []
+	var grid = grid_controller.grid
+	for item in selected_items:
+		for asset_key in assets.keys():
+			if used_items_list.get_item_text(item) == asset_key:
+				pool.append(assets[asset_key]) 
+	
+	WaveFunctionCollapse.initialize(grid_x, grid_y, grid_z, grid)
+	for x in range(grid_x):
+		for y in range(grid_y):
+			for z in range(grid_z):
+				WaveFunctionCollapse.place_random(pool, x,y,z, grid, grid_controller)
