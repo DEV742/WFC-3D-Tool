@@ -20,6 +20,7 @@ func init_list(list : Dictionary, target_edit : LineEdit):
 	socket_list.add_item("Empty")
 	socket_list.deselect_all()
 	socket_text.text = "String:"
+	
 	#select the items present in the socket
 	if array != null:
 		for array_item in array:

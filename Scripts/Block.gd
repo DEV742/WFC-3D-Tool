@@ -3,7 +3,7 @@ extends Node3D
 class_name AssetBlock
 
 var asset_name : String
-var weight : int
+var weight : float
 var thumbnail : ImageTexture
 var path : String
 var scene : Node

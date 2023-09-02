@@ -46,6 +46,7 @@ grow_horizontal = 2
 tab_alignment = 1
 
 [node name="Generation" type="Control" parent="MainMenu/Panel/TabContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
@@ -176,7 +177,6 @@ grow_horizontal = 2
 text = "Assets to use in generation:"
 
 [node name="Assets" type="Control" parent="MainMenu/Panel/TabContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
@@ -734,7 +734,6 @@ cancel_button_text = "Revert"
 title = "Socket Creator"
 initial_position = 2
 size = Vector2i(500, 500)
-visible = false
 exclusive = true
 unresizable = true
 always_on_top = true
@@ -781,15 +780,41 @@ text = "Save socket"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.071
-anchor_top = 0.765
+anchor_top = 0.879
 anchor_right = 1.0
-anchor_bottom = 0.765
+anchor_bottom = 0.879
 offset_left = -20.0
 offset_top = -23.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "String:"
+
+[node name="LineEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.169
+anchor_top = 0.795
+anchor_right = 0.84
+anchor_bottom = 0.807
+offset_top = -31.0
+offset_right = 67.0625
+grow_vertical = 0
+tooltip_text = "A weight that will define the probability of currently selected object to be chosen during cell collapse"
+placeholder_text = "1.0"
+alignment = 1
+
+[node name="WeightLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.795
+anchor_right = 0.114
+anchor_bottom = 0.795
+offset_top = -26.0
+offset_right = 55.0
+grow_vertical = 0
+text = "Weight:"
 
 [node name="Settings" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false

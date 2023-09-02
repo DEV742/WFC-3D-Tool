@@ -9,8 +9,8 @@ var grid_outline = preload("res://Scenes/grid_outline.tscn")
 var grid : Dictionary
 
 func create_grid():
-	for x in range(size_x):
-		for y in range(size_y):
+	for y in range(size_y):
+		for x in range(size_x):
 			for z in range(size_z):
 				var key = Vector3(x,y,z)
 				var object = grid_outline.instantiate()

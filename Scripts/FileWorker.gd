@@ -53,7 +53,7 @@ static func load_scenes() -> Dictionary:
 		var scene = load_scene(asset_name)
 		var asset = AssetBlock.new()
 		asset.asset_name = scene.get_meta("name")
-		asset.weight = int(scene.get_meta("weight"))
+		asset.weight = float(scene.get_meta("weight"))
 		asset.sockets = scene.get_meta("sockets")
 		asset.scene = scene
 		var bytes = scene.get_meta("thumbnail")
