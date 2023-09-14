@@ -9,6 +9,10 @@ var grid_z = 0
 var assets : Dictionary
 var grid_controller
 
+var clean_up = false
+
+var wfc
+
 var objects = []
 @onready var used_items_list = $UsedAssets 
 
@@ -62,19 +66,19 @@ func _on_generate_button_pressed():
 		for asset_key in assets.keys():
 			if used_items_list.get_item_text(item) == asset_key:
 				pool[assets[asset_key].asset_name] = assets[asset_key]
-	var wfc = WFC.new()
+	wfc = WFC.new()
 	wfc.grid_x = grid_x
 	wfc.grid_y = grid_y
 	wfc.grid_z = grid_z
 	wfc.initialize(pool)
-	var result = wfc.solve()
+	var result = wfc.solve(clean_up)
 	for x in range(grid_x):
 		for y in range(grid_y):
 			for z in range(grid_z):
 				var asset_name
 				var obj
-				if result[x][y][z].possibilities.size() > 0:
-					asset_name = result[x][y][z].possibilities[0].asset_name
+				if result[x][y][z].chosen_block != null:
+					asset_name = result[x][y][z].chosen_block.asset_name
 					obj = assets[asset_name].scene.duplicate()
 					objects.append(obj)
 					obj.position = result[x][y][z].pos
@@ -82,3 +86,24 @@ func _on_generate_button_pressed():
 					grid_controller.add_child(obj)
 	print("Done")
 	
+
+
+func _on_clean_up_button_toggled(button_pressed):
+	clean_up = button_pressed
+	for obj in objects:
+		obj.queue_free()
+	objects.clear()
+	
+	var result = wfc.clean_up()
+	for x in range(grid_x):
+		for y in range(grid_y):
+			for z in range(grid_z):
+				var asset_name
+				var obj
+				if result[x][y][z].chosen_block != null:
+					asset_name = result[x][y][z].chosen_block.asset_name
+					obj = assets[asset_name].scene.duplicate()
+					objects.append(obj)
+					obj.position = result[x][y][z].pos
+					obj.rotate_y(deg_to_rad(result[x][y][z].rotation * 90))
+					grid_controller.add_child(obj)

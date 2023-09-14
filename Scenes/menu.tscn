@@ -46,7 +46,6 @@ grow_horizontal = 2
 tab_alignment = 1
 
 [node name="Generation" type="Control" parent="MainMenu/Panel/TabContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
@@ -176,7 +175,22 @@ offset_bottom = 26.0
 grow_horizontal = 2
 text = "Assets to use in generation:"
 
+[node name="CleanUpButton" type="CheckButton" parent="MainMenu/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.239
+anchor_top = 0.625
+anchor_right = 0.773
+anchor_bottom = 0.625
+offset_left = -56.0
+offset_top = -31.0
+offset_right = 56.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Clean up"
+
 [node name="Assets" type="Control" parent="MainMenu/Panel/TabContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
@@ -734,6 +748,7 @@ cancel_button_text = "Revert"
 title = "Socket Creator"
 initial_position = 2
 size = Vector2i(500, 500)
+visible = false
 exclusive = true
 unresizable = true
 always_on_top = true
@@ -763,6 +778,8 @@ grow_horizontal = 2
 grow_vertical = 2
 select_mode = 1
 allow_rmb_select = true
+max_columns = 2
+fixed_column_width = 135
 
 [node name="Button" type="Button" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
@@ -790,12 +807,12 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "String:"
 
-[node name="LineEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+[node name="WeightEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.169
 anchor_top = 0.795
-anchor_right = 0.84
+anchor_right = 0.613
 anchor_bottom = 0.807
 offset_top = -31.0
 offset_right = 67.0625
@@ -816,6 +833,20 @@ offset_right = 55.0
 grow_vertical = 0
 text = "Weight:"
 
+[node name="SocketWeightApply" type="Button" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.864
+anchor_top = 0.739
+anchor_right = 0.977
+anchor_bottom = 0.773
+offset_left = -52.0
+offset_top = -2.0
+offset_bottom = 18.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "Apply"
+
 [node name="Settings" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 layout_mode = 2
@@ -827,6 +858,7 @@ layout_mode = 2
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeZ" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_z_text_changed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/SelectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_select_all_button_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/DeselectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_deselect_all_button_pressed"]
+[connection signal="toggled" from="MainMenu/Panel/TabContainer/Generation/CleanUpButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_clean_up_button_toggled"]
 [connection signal="item_clicked" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SaveButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_save_button_pressed"]
@@ -861,3 +893,4 @@ layout_mode = 2
 [connection signal="close_requested" from="MainMenu/Panel/TabContainer/Assets/SocketCreator" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_close_requested"]
 [connection signal="multi_selected" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/ItemList" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_item_list_multi_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/Button" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_save_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/SocketWeightApply" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_socket_weight_apply_pressed"]

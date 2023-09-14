@@ -31,7 +31,7 @@ static func generate_sockets(asset_sockets : Dictionary, rotation_index : int):
 	
 	for key in output_order.keys():
 		output[output_order[key]] = JSON.parse_string(rotated[key])
-		if output[output_order[key]].size() > 0 and output[output_order[key]][0] == "":
+		if output[output_order[key]].size() > 0 and output[output_order[key]].values().has(""):
 			output[output_order[key]].clear()
 	
 	return output
@@ -40,11 +40,11 @@ static func generate_from_asset(asset : AssetBlock):
 	var prototypes = []
 	prototypes.resize(4)
 	
-	for i in prototypes.size():
+	for i in range(prototypes.size()):
 		prototypes[i] = Prototype.new()
 		prototypes[i].asset_name  = asset.asset_name
 		prototypes[i].rotation = i
 		prototypes[i].sockets = generate_sockets(asset.sockets, i).duplicate()
-		prototypes[i].weight = asset.weight
+		prototypes[i].weight = float(asset.weight)
 	return prototypes
 
