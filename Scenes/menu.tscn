@@ -1,10 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://dniry0r343es0"]
+[gd_scene load_steps=11 format=3 uid="uid://dniry0r343es0"]
 
 [ext_resource type="Theme" uid="uid://dna37blibu61" path="res://Themes/dark_default_theme.tres" id="1_dsxom"]
 [ext_resource type="Script" path="res://Scripts/Assets.gd" id="2_27f4q"]
 [ext_resource type="Script" path="res://Scripts/Generation.gd" id="2_lipvx"]
 [ext_resource type="PackedScene" uid="uid://g3ijwfms4ixu" path="res://Scenes/render.tscn" id="4_sa1rd"]
 [ext_resource type="Script" path="res://Scripts/SocketCreator.gd" id="5_1m84e"]
+[ext_resource type="Script" path="res://Scripts/BiomeEditor.gd" id="6_5huri"]
+[ext_resource type="Script" path="res://Scripts/Settings.gd" id="6_82lwa"]
+[ext_resource type="Script" path="res://Scripts/Biomes.gd" id="6_q8yfc"]
 
 [sub_resource type="InputEventKey" id="InputEventKey_sqhhr"]
 keycode = 32
@@ -176,6 +179,7 @@ grow_horizontal = 2
 text = "Assets to use in generation:"
 
 [node name="CleanUpButton" type="CheckButton" parent="MainMenu/Panel/TabContainer/Generation"]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.239
@@ -189,6 +193,23 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Clean up"
 
+[node name="ProgressBar" type="ProgressBar" parent="MainMenu/Panel/TabContainer/Generation"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.921
+anchor_right = 0.966
+anchor_bottom = 0.921
+offset_left = -0.132001
+offset_top = -25.995
+offset_right = 0.131989
+offset_bottom = 1.005
+grow_horizontal = 2
+grow_vertical = 0
+step = 0.1
+rounded = true
+
 [node name="Assets" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 570)
@@ -200,7 +221,7 @@ script = ExtResource("2_27f4q")
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 0.45
+anchor_bottom = 0.382
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -236,9 +257,9 @@ text = "Delete"
 [node name="AddButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.52
+anchor_top = 0.462
 anchor_right = 1.0
-anchor_bottom = 0.53
+anchor_bottom = 0.462
 offset_left = 10.0
 offset_right = -10.0
 offset_bottom = -10.0
@@ -251,13 +272,13 @@ text = "Import"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.4
-anchor_top = 0.53
+anchor_top = 0.499
 anchor_right = 1.0
-anchor_bottom = 0.59
-offset_left = 10.0
-offset_top = -0.110016
-offset_right = -10.0
-offset_bottom = -0.110016
+anchor_bottom = 0.499
+offset_left = 10.8
+offset_top = -6.34998
+offset_right = -9.0
+offset_bottom = -11.05
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -280,13 +301,13 @@ text = "Object name:"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.4
-anchor_top = 0.6
+anchor_top = 0.569
 anchor_right = 1.0
-anchor_bottom = 0.66
-offset_left = 10.0
-offset_top = 3.05176e-05
-offset_right = -10.0
-offset_bottom = 3.05176e-05
+anchor_bottom = 0.58
+offset_left = 10.8
+offset_top = -16.0
+offset_right = -9.0
+offset_bottom = -20.7
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -302,6 +323,34 @@ anchor_bottom = 0.5
 offset_left = 1.52588e-05
 grow_vertical = 2
 text = "Object weight:"
+
+[node name="BiomeEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 0.66
+offset_left = 10.8
+offset_top = 16.0
+offset_right = -9.0
+offset_bottom = 11.3
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_dsxom")
+placeholder_text = "None"
+alignment = 1
+
+[node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Assets/BiomeEdit"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.75
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 1.52588e-05
+grow_vertical = 2
+text = "Object biome:"
 
 [node name="SocketEdit_U" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
@@ -492,17 +541,16 @@ anchors_preset = -1
 anchor_top = 0.67
 anchor_right = 1.0
 anchor_bottom = 0.716
-offset_left = 120.0
-offset_top = 0.0999756
-offset_right = -119.0
-offset_bottom = -0.120026
+offset_left = 15.0
+offset_top = 1.34998
+offset_right = -224.0
+offset_bottom = 1.12997
 text = "Sockets"
 
 [node name="FileDialog" type="FileDialog" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "Open a File"
 initial_position = 2
 size = Vector2i(732, 500)
-always_on_top = true
 theme = ExtResource("1_dsxom")
 ok_button_text = "Open"
 file_mode = 0
@@ -512,12 +560,11 @@ show_hidden_files = true
 
 [node name="AssetImporter" type="Window" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "Asset import"
-initial_position = 2
+position = Vector2i(600, 40)
 size = Vector2i(500, 570)
 visible = false
 exclusive = true
 unresizable = true
-always_on_top = true
 
 [node name="MarginContainer" type="MarginContainer" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter"]
 anchors_preset = 15
@@ -605,6 +652,74 @@ grow_vertical = 2
 size_flags_vertical = 0
 placeholder_text = "Weight"
 alignment = 1
+
+[node name="ConstrToLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.341
+anchor_right = 0.775
+anchor_bottom = 0.341
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Constraint block to:"
+
+[node name="ConstraintToSelect" type="OptionButton" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrToLabel"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.432
+anchor_right = 1.0
+anchor_bottom = 0.432
+offset_left = -6.84
+offset_top = 11.5717
+offset_right = 7.16
+offset_bottom = 42.5717
+tooltip_text = "Limit this blocks possible position so that it is restricted to selection"
+alignment = 1
+item_count = 3
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Top"
+popup/item_1/id = 1
+popup/item_2/text = "Bottom"
+popup/item_2/id = 2
+
+[node name="ConstrFromLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.557
+anchor_right = 0.86
+anchor_bottom = 0.557
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Constraint block from:"
+
+[node name="ConstraintFromSelect" type="OptionButton" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrFromLabel"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.432
+anchor_right = 0.909
+anchor_bottom = 0.432
+offset_left = -6.84
+offset_top = 11.5717
+offset_right = 7.16
+offset_bottom = 42.5717
+tooltip_text = "Limit this blocks possible placements to exclude the selected position"
+alignment = 1
+item_count = 3
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Top"
+popup/item_1/id = 1
+popup/item_2/text = "Bottom"
+popup/item_2/id = 2
 
 [node name="RightPanel" type="Panel" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer"]
 layout_mode = 2
@@ -746,12 +861,11 @@ cancel_button_text = "Revert"
 
 [node name="SocketCreator" type="Window" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "Socket Creator"
-initial_position = 2
+position = Vector2i(50, 40)
 size = Vector2i(500, 500)
 visible = false
 exclusive = true
 unresizable = true
-always_on_top = true
 theme = ExtResource("1_dsxom")
 script = ExtResource("5_1m84e")
 
@@ -769,87 +883,325 @@ layout_mode = 2
 [node name="ItemList" type="ItemList" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.714
+anchor_left = 0.02
+anchor_top = 0.432
+anchor_right = 0.99
+anchor_bottom = 0.822
 offset_left = 10.0
 offset_top = 20.0
 offset_right = -10.0
 grow_horizontal = 2
 grow_vertical = 2
-select_mode = 1
 allow_rmb_select = true
-max_columns = 2
-fixed_column_width = 135
 
-[node name="Button" type="Button" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+[node name="SaveButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.025
-anchor_top = 0.958
-anchor_right = 0.975
-anchor_bottom = 0.975
+anchor_left = 0.034
+anchor_top = 0.966
+anchor_right = 0.977
+anchor_bottom = 0.966
 offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Save socket"
 
-[node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.071
-anchor_top = 0.879
-anchor_right = 1.0
-anchor_bottom = 0.879
-offset_left = -20.0
-offset_top = -23.0
-offset_right = 20.0
-grow_horizontal = 2
-grow_vertical = 0
-text = "String:"
-
-[node name="WeightEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.169
-anchor_top = 0.795
-anchor_right = 0.613
-anchor_bottom = 0.807
-offset_top = -31.0
-offset_right = 67.0625
-grow_vertical = 0
-tooltip_text = "A weight that will define the probability of currently selected object to be chosen during cell collapse"
-placeholder_text = "1.0"
-alignment = 1
-
-[node name="WeightLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+[node name="ValidLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.034
-anchor_top = 0.795
+anchor_top = 0.06
 anchor_right = 0.114
-anchor_bottom = 0.795
+anchor_bottom = 0.06
 offset_top = -26.0
 offset_right = 55.0
 grow_vertical = 0
-text = "Weight:"
+text = "Possible neighbours for this socket:"
 
-[node name="SocketWeightApply" type="Button" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+[node name="CurrentLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.864
-anchor_top = 0.739
-anchor_right = 0.977
-anchor_bottom = 0.773
-offset_left = -52.0
-offset_top = -2.0
-offset_bottom = 18.0
-grow_horizontal = 0
+anchor_left = 0.034
+anchor_top = 0.471
+anchor_right = 0.114
+anchor_bottom = 0.471
+offset_top = -26.0
+offset_right = 55.0
+grow_vertical = 0
+text = "Currently used sockets:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.023
+anchor_top = 0.054
+anchor_right = 0.978
+anchor_bottom = 0.396
+offset_bottom = 8.0
+grow_horizontal = 2
+vertical_scroll_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/ScrollContainer"]
+custom_minimum_size = Vector2(300, 500)
+layout_mode = 2
+size_flags_vertical = 2
+size_flags_stretch_ratio = 2.0
+columns = 4
+
+[node name="Socket" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.896
+anchor_right = 0.972
+anchor_bottom = 0.9
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+tooltip_text = "A socket index that will be used to determine 
+whether a certain side of the neighbouring object can be
+ connected to the current one or not."
+placeholder_text = "Socket Index"
+alignment = 1
+
+[node name="BiomeEditor" type="Window" parent="MainMenu/Panel/TabContainer/Assets"]
+title = "Biome editor"
+initial_position = 2
+size = Vector2i(400, 350)
+visible = false
+exclusive = true
+unresizable = true
+always_on_top = true
+script = ExtResource("6_5huri")
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu/Panel/TabContainer/Assets/BiomeEditor"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
-text = "Apply"
+
+[node name="Panel" type="Panel" parent="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer"]
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.091
+anchor_top = 0.159
+anchor_right = 0.909
+anchor_bottom = 0.705
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+select_mode = 1
+
+[node name="SaveButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.955
+anchor_right = 0.955
+anchor_bottom = 0.955
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Save"
+
+[node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.011
+anchor_right = 0.5
+anchor_bottom = 0.034
+offset_left = -165.5
+offset_right = 165.5
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "This asset belongs to the following biomes:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ConstrainToLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.577
+anchor_right = 0.775
+anchor_bottom = 0.577
+offset_left = -0.410001
+offset_top = -0.315002
+offset_right = 50.05
+offset_bottom = 25.685
+text = "Constrain to:"
+vertical_alignment = 1
+
+[node name="ConstraintToSelect" type="OptionButton" parent="MainMenu/Panel/TabContainer/Assets/ConstrainToLabel"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.636
+anchor_right = 1.0
+offset_left = -35.448
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 29.0
+tooltip_text = "Limit this blocks possible position so that it is restricted to selection"
+alignment = 1
+item_count = 3
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Top"
+popup/item_1/id = 1
+popup/item_2/text = "Bottom"
+popup/item_2/id = 2
+
+[node name="ConstrainFromLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.045
+anchor_top = 0.637
+anchor_right = 0.86
+anchor_bottom = 0.637
+offset_left = -0.410001
+offset_top = -7.01501
+offset_right = 31.72
+offset_bottom = 18.985
+text = "Constrain from:"
+vertical_alignment = 1
+
+[node name="ConstraintFromSelect" type="OptionButton" parent="MainMenu/Panel/TabContainer/Assets/ConstrainFromLabel"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.602
+anchor_top = 0.432
+anchor_right = 0.954
+anchor_bottom = 0.432
+offset_left = -30.55
+offset_top = -10.232
+offset_right = 7.64999
+offset_bottom = 20.768
+tooltip_text = "Limit this blocks possible placements to exclude the selected position"
+alignment = 1
+item_count = 3
+selected = 0
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Top"
+popup/item_1/id = 1
+popup/item_2/text = "Bottom"
+popup/item_2/id = 2
+
+[node name="Biomes" type="Control" parent="MainMenu/Panel/TabContainer"]
+visible = false
+layout_mode = 2
+script = ExtResource("6_q8yfc")
+
+[node name="BiomeList" type="ItemList" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.022
+anchor_right = 0.966
+anchor_bottom = 0.372
+grow_horizontal = 2
+
+[node name="BiomeEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.036
+anchor_top = 0.443
+anchor_right = 0.966
+anchor_bottom = 0.443
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+placeholder_text = "Biome name"
+alignment = 1
+
+[node name="AddButton" type="Button" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.037
+anchor_top = 0.501
+anchor_right = 0.966
+anchor_bottom = 0.501
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Add"
+
+[node name="DeleteButton" type="Button" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.535
+anchor_right = 0.967
+anchor_bottom = 0.558
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Delete"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MainMenu/Panel/TabContainer/Biomes"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.046
+anchor_top = 0.818
+anchor_right = 0.41
+anchor_bottom = 0.818
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Biome color"
+
+[node name="AssetsList" type="ItemList" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.034
+anchor_top = 0.568
+anchor_right = 0.966
+anchor_bottom = 0.92
+grow_horizontal = 2
+grow_vertical = 0
+select_mode = 1
+
+[node name="AssignButton" type="Button" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.023
+anchor_top = 0.989
+anchor_right = 0.977
+anchor_bottom = 0.989
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Assign"
 
 [node name="Settings" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 layout_mode = 2
+script = ExtResource("6_82lwa")
+
+[node name="BiomesToggle" type="CheckButton" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.011
+anchor_top = 0.011
+anchor_right = 0.989
+anchor_bottom = 0.023
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "Biomes"
+alignment = 1
 
 [connection signal="tab_changed" from="MainMenu/Panel/TabContainer" to="MainMenu/Panel/TabContainer/Generation" method="_on_tab_container_tab_changed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/GenerateButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_generate_button_pressed"]
@@ -866,6 +1218,8 @@ layout_mode = 2
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/AddButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_add_button_pressed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Assets/NameEdit" to="MainMenu/Panel/TabContainer/Assets" method="_on_name_edit_text_changed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Assets/WeightEdit" to="MainMenu/Panel/TabContainer/Assets" method="_on_weight_edit_text_changed"]
+[connection signal="focus_entered" from="MainMenu/Panel/TabContainer/Assets/BiomeEdit" to="MainMenu/Panel/TabContainer/Assets" method="_on_biome_edit_focus_entered"]
+[connection signal="text_changed" from="MainMenu/Panel/TabContainer/Assets/BiomeEdit" to="MainMenu/Panel/TabContainer/Assets" method="_on_biome_edit_text_changed"]
 [connection signal="focus_entered" from="MainMenu/Panel/TabContainer/Assets/SocketEdit_U" to="MainMenu/Panel/TabContainer/Assets" method="_on_socket_edit_u_focus_entered"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Assets/SocketEdit_U" to="MainMenu/Panel/TabContainer/Assets" method="_on_socket_edit_u_text_changed"]
 [connection signal="focus_entered" from="MainMenu/Panel/TabContainer/Assets/SocketEdit_D" to="MainMenu/Panel/TabContainer/Assets" method="_on_socket_edit_d_focus_entered"]
@@ -891,6 +1245,15 @@ layout_mode = 2
 [connection signal="canceled" from="MainMenu/Panel/TabContainer/Assets/NotSavedDialog" to="MainMenu/Panel/TabContainer/Assets" method="_on_not_saved_dialog_canceled"]
 [connection signal="confirmed" from="MainMenu/Panel/TabContainer/Assets/NotSavedDialog" to="MainMenu/Panel/TabContainer/Assets" method="_on_not_saved_dialog_confirmed"]
 [connection signal="close_requested" from="MainMenu/Panel/TabContainer/Assets/SocketCreator" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_close_requested"]
-[connection signal="multi_selected" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/ItemList" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_item_list_multi_selected"]
-[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/Button" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_save_button_pressed"]
-[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/SocketWeightApply" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_socket_weight_apply_pressed"]
+[connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/ItemList" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_item_list_item_selected"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/SaveButton" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_save_button_pressed"]
+[connection signal="text_changed" from="MainMenu/Panel/TabContainer/Assets/SocketCreator/MarginContainer/Panel/Socket" to="MainMenu/Panel/TabContainer/Assets/SocketCreator" method="_on_socket_text_changed"]
+[connection signal="close_requested" from="MainMenu/Panel/TabContainer/Assets/BiomeEditor" to="MainMenu/Panel/TabContainer/Assets/BiomeEditor" method="_on_close_requested"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer/Panel/SaveButton" to="MainMenu/Panel/TabContainer/Assets/BiomeEditor" method="_on_save_button_pressed"]
+[connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ConstrainToLabel/ConstraintToSelect" to="MainMenu/Panel/TabContainer/Assets" method="_on_constraint_to_select_item_selected"]
+[connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ConstrainFromLabel/ConstraintFromSelect" to="MainMenu/Panel/TabContainer/Assets" method="_on_constraint_from_select_item_selected"]
+[connection signal="item_selected" from="MainMenu/Panel/TabContainer/Biomes/BiomeList" to="MainMenu/Panel/TabContainer/Biomes" method="_on_biome_list_item_selected"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/AddButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_add_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/DeleteButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_delete_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/AssignButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_assign_button_pressed"]
+[connection signal="toggled" from="MainMenu/Panel/TabContainer/Settings/BiomesToggle" to="MainMenu/Panel/TabContainer/Settings" method="_on_biomes_toggle_toggled"]

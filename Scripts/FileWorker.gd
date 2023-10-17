@@ -55,6 +55,10 @@ static func load_scenes() -> Dictionary:
 		asset.asset_name = scene.get_meta("name")
 		asset.weight = float(scene.get_meta("weight"))
 		asset.sockets = scene.get_meta("sockets")
+		if (scene.has_meta("constrain_to")):
+			asset.constrain_to = scene.get_meta("constrain_to")
+		if (scene.has_meta("constrain_from")):
+			asset.constrain_from = scene.get_meta("constrain_from")
 		asset.scene = scene
 		var bytes = scene.get_meta("thumbnail")
 		if bytes != null:

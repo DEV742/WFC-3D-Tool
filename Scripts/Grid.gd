@@ -21,7 +21,7 @@ func create_grid():
 
 func clear_grid():
 	for key in grid.keys():
-				grid[key].queue_free()
+		grid[key].queue_free()
 	grid.clear()
 
 func update_grid(x : int, y : int, z : int):
