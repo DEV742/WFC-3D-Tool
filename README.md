@@ -1,18 +1,18 @@
 # World-Generation-Tool
 A procedural 3D game world generation tool based on wave function collapse algorithm. 
 
-![photo_2023-07-08_12-31-08](https://github.com/DEV742/World-Generation-Tool/assets/32599868/8d0ea993-c707-404a-b99b-d0eddfa44e48)
+![generation](https://github.com/DEV742/World-Generation-Tool/assets/32599868/c99c30c2-7b94-4292-97b7-99c727b1dd51)
+
 
 ## Roadmap
 - [X] Basic interface design
 - [X] File import
 - [X] Data structures needed for WFC
 - [X] Wave Function Collapse
-- [ ] Voronoi algorithm - biome generation
-- [ ] Perlin noise landscape generation
+- [X] Voronoi algorithm - biome generation
 - [ ] Debug/Inspect tools
 - [ ] Select tool
+- [ ] Custom user script support
 - [ ] Export
-- [ ] Cellular automata
 
 Made for the bachelor's thesis at Wrocław University of Science and Technology by dev742
