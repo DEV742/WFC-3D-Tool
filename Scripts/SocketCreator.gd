@@ -1,53 +1,92 @@
 extends Window
 
 @onready var socket_list = $MarginContainer/Panel/ItemList
-@onready var socket_text = $MarginContainer/Panel/Label
+
+@onready var grid = $MarginContainer/Panel/ScrollContainer/GridContainer
+
+@onready var socket_id_edit = $MarginContainer/Panel/Socket
 
 var socket_key = ""
 var socket_string = ""
+
+var edited_asset : AssetBlock
+
 var target : LineEdit
 
+var assets = {}
 
-func init_list(list : Dictionary, target_edit : LineEdit):
-	var current_socket_string = target_edit.text
-	var array
-	if current_socket_string != "":
-		array = JSON.parse_string(current_socket_string)
-	target = target_edit
-	socket_list.clear()
-	for key in list.keys():
-		socket_list.add_item(key, list[key].thumbnail)
-	socket_list.add_item("Empty")
-	socket_list.deselect_all()
-	socket_text.text = "String:"
-	#select the items present in the socket
-	if array != null:
-		for array_item in array:
-			for i in socket_list.get_item_count():
-				if socket_list.get_item_text(i) == array_item:
-					socket_list.select(i, false)
-		socket_text.text = JSON.stringify(array)
-	else:
-		socket_text.text = "String:"
+var added_assets = []
+
+var elements = {}
+
+var socket_id = ""
+
+var used_sockets = []
 
 
-func _on_item_list_multi_selected(_index, _selected):
-	var idx = socket_list.get_selected_items()
-	var array = []
-	for id in idx:
-		if socket_list.get_item_text(id) != "Empty":
-			array.append(socket_list.get_item_text(id))
-		elif array.size() == 0:
-			array.append("")
-	var str_json = JSON.stringify(array)
-	socket_string = str_json
-	print(str_json)
-	socket_text.text = str_json
+func clear_grid_elements():
+	for key in elements.keys():
+		if len(elements[key]) != 0:
+			for item in elements[key]:
+				if item.get_parent() == grid:
+					grid.remove_child(item)
 	
+
+func load_valid_neighbours(socket : String):
+	var img
+	var label
+	added_assets.clear()
+	clear_grid_elements()
+	for item_key in assets.keys():
+		for s in assets[item_key].sockets.keys():
+			var data = assets[item_key].sockets[s]
+			if str(data) == socket and not added_assets.has(item_key):
+				img = TextureRect.new()
+				label = Label.new()
+				img.texture = assets[item_key].thumbnail
+				label.text = item_key
+				grid.add_child(img)
+				grid.add_child(label)
+				elements[item_key] = []
+				elements[item_key].append(img)
+				elements[item_key].append(label)
+				added_assets.append(item_key)
+
+func init_list(list : Dictionary, target_edit : LineEdit, asset : AssetBlock):
+	socket_list.deselect_all()
+	edited_asset = asset
+	target = target_edit
+	assets = list
+	added_assets.clear()
+	
+	clear_grid_elements()
+	
+	var string = asset.sockets[socket_key]
+
+	socket_id_edit.text = str(string)
+	load_valid_neighbours(string)
+
+	for item_key in list.keys():
+		for socket_dir in list[item_key].sockets.keys():
+			var data = list[item_key].sockets[socket_dir]
+			if not used_sockets.has(str(data)):
+				socket_list.add_item(str(data))
+				used_sockets.append(str(data))
+	
+	for i in range(socket_list.item_count):
+		if socket_list.get_item_text(i) == str(string):
+			socket_list.select(i)
 
 
 func _on_save_button_pressed():
-	target.set_text(socket_string)
+	var text = socket_id_edit.text
+	while str(text).ends_with(" "):
+		text = str(text).substr(0, len(text)-1)
+	socket_id = text
+
+	edited_asset.sockets[socket_key] = socket_id
+	print(socket_id)
+	target.set_text(socket_id)
 	self.visible = false
 	target.text_changed.emit(socket_string)
 	target.release_focus()
@@ -57,3 +96,18 @@ func _on_close_requested():
 	self.visible = false
 	if target != null:
 		target.release_focus()
+
+
+func _on_item_list_item_selected(index):
+	var text = socket_list.get_item_text(index)
+	socket_id_edit.text = text
+	load_valid_neighbours(text)
+
+
+func _on_socket_text_changed(new_text):
+	while str(new_text).ends_with(" "):
+		new_text = str(new_text).substr(0, len(new_text)-1)
+	for i in range(socket_list.item_count):
+		if socket_list.get_item_text(i) == new_text:
+			socket_list.select(i)
+	load_valid_neighbours(new_text)

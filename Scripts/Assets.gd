@@ -13,14 +13,19 @@ var selected_asset: AssetBlock
 
 var generated_node
 
+var imported_asset : AssetBlock
+
 @onready var delete_dialog  = $DeleteDialog
 @onready var field_dialog = $FieldDialog
 @onready var name_taken_dialog = $NameTakenDialog
 @onready var not_saved_dialog = $NotSavedDialog
 @onready var socket_creator_dialog = $SocketCreator
+
 #Settings fields
 @onready var asset_name = $NameEdit
 @onready var asset_weight = $WeightEdit
+@onready var biome_edit = $BiomeEdit
+@onready var biome_editor = $BiomeEditor
 @onready var asset_sockets = {
 	"U" : $SocketEdit_U,
 	"D" : $SocketEdit_D,
@@ -35,9 +40,18 @@ var clicked_idx : int
 var previous_clicked_idx : int
 var previous_edit_string = ""
 
+var biomes
+@export var biomes_controller : Biomes
+
+@onready var constr_to_edit = $ConstrainToLabel/ConstraintToSelect
+@onready var constr_from_edit = $ConstrainFromLabel/ConstraintFromSelect
+
 #Importer fields
 @onready var model_name = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/AssetNameEdit
 @onready var model_weight = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/WeightEdit
+
+@onready var constr_to = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrToLabel/ConstraintToSelect
+@onready var constr_from = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrFromLabel/ConstraintFromSelect
 
 @onready var model_sockets = {
 	"U" : $AssetImporter/MarginContainer/Panel/HSplitContainer/RightPanel/Socket_U,
@@ -52,25 +66,41 @@ signal enter_demo
 signal exit_demo
 signal set_demo_model(model : Node3D)
 
-func _ready():
+func _init():
 	previous_clicked_idx = -1
+	print(FileWorker.get_assets_list())
+	assets = FileWorker.load_scenes()
+	biomes = Biomes.load_biomes()
+	
+	var biome_array = []
+	for asset in assets.keys():
+		biome_array = []
+		for biome in biomes.keys():
+			if biomes[biome].has(asset):
+				biome_array.append(biome)
+		assets[asset].biomes = biome_array
+		
+func get_assets():
+	return assets
+	
+func _ready():
 	var root_node = get_tree().get_root().get_child(0)
 	thumb_camera = root_node.find_child("ThumbnailCamera")
 	main_camera = root_node.find_child("Camera")
 	self.enter_demo.connect(root_node._enter_demo_mode)
 	self.exit_demo.connect(root_node._exit_demo_mode)
 	self.set_demo_model.connect(root_node._set_demo_model)
-	print(FileWorker.get_assets_list())
-	assets = FileWorker.load_scenes()
-	for scene_name in assets.keys():
-		item_list.add_item(scene_name, assets[scene_name].thumbnail)
-	
+	if not assets.is_empty():
+		for scene_name in assets.keys():
+			item_list.add_item(scene_name, assets[scene_name].thumbnail)
+
 func _on_file_dialog_file_selected(path):
 	generated_node = FileWorker.load_gltf(path)
 	grid.visible = false
 	settings_popup.visible = true
 	enter_demo.emit()
 	set_demo_model.emit(generated_node)
+	imported_asset = AssetBlock.new()
 	
 
 
@@ -100,21 +130,34 @@ func _on_import_save_button_pressed():
 		var tex = ImageTexture.create_from_image(img)
 		exit_demo.emit()
 		settings_popup.visible = false
-		var asset = AssetBlock.new()
-		asset.asset_name = model_name.text
-		asset.weight = model_weight.text
-		asset.thumbnail = tex
-		asset.sockets = socket_values
-		asset.scene = generated_node
+		imported_asset = AssetBlock.new()
+		imported_asset.asset_name = model_name.text
+		imported_asset.weight = model_weight.text
+		imported_asset.thumbnail = tex
+		imported_asset.sockets = socket_values
+		imported_asset.scene = generated_node
+		var selected_item = constr_from.get_selected_id()
+		if selected_item == -1:
+			imported_asset.constrain_from = "None"
+		else:
+			imported_asset.constrain_from = constr_from.get_item_text(selected_item)
+		selected_item = constr_to.get_selected_id()
+		if selected_item == -1:
+			imported_asset.constrain_to = "None"
+		else:
+			imported_asset.constrain_to = constr_to.get_item_text(selected_item)
 		
-		generated_node.set_meta("name", asset.asset_name)
-		generated_node.set_meta("thumbnail", asset.thumbnail.get_image().get_data())
-		generated_node.set_meta("weight", asset.weight)
-		generated_node.set_meta("sockets", asset.sockets)
-		var path = FileWorker.save_scene(asset.asset_name, generated_node)
-		asset.path = path
-		assets[asset.asset_name] = asset
-		item_list.add_item(asset.asset_name, tex)
+		generated_node.set_meta("name", imported_asset.asset_name)
+		generated_node.set_meta("thumbnail", imported_asset.thumbnail.get_image().get_data())
+		generated_node.set_meta("weight", imported_asset.weight)
+		generated_node.set_meta("sockets", imported_asset.sockets)
+		generated_node.set_meta("biomes", imported_asset.biomes)
+		generated_node.set_meta("constrain_to", imported_asset.constrain_to)
+		generated_node.set_meta("constrain_from", imported_asset.constrain_from)
+		var path = FileWorker.save_scene(imported_asset.asset_name, generated_node)
+		imported_asset.path = path
+		assets[imported_asset.asset_name] = imported_asset
+		item_list.add_item(imported_asset.asset_name, tex)
 	else:
 		field_dialog.visible = true
 		return
@@ -130,6 +173,23 @@ func load_asset_data(index):
 	selected_asset = selected
 	asset_name.set_text(selected.asset_name)
 	asset_weight.set_text(str(selected.weight))
+	
+	if selected.constrain_from.is_empty() or selected.constrain_from == "None":
+		constr_from_edit.select(0)
+	else:
+		print(selected.constrain_from)
+		for i in range(constr_from_edit.item_count):
+			if constr_from_edit.get_item_text(i) == selected.constrain_from:
+				constr_from_edit.select(i)
+	
+	if selected.constrain_to.is_empty() or selected.constrain_to == "None":
+		constr_to_edit.select(0)
+	else:
+		print(selected.constrain_to)
+		for i in range(constr_to_edit.item_count):
+			if constr_to_edit.get_item_text(i) == selected.constrain_to:
+				constr_to_edit.select(i)
+	
 	for socket_key in asset_sockets.keys():
 		asset_sockets[socket_key].set_text(selected.sockets[socket_key])
 
@@ -146,14 +206,25 @@ func save_asset():
 	var old_name = selected_asset.asset_name
 	selected_asset.asset_name = asset_name.text
 	selected_asset.weight = asset_weight.text
-	var new_sockets = {}
-	for key in asset_sockets.keys():
-		new_sockets[key] = asset_sockets[key].text
-	selected_asset.sockets = new_sockets
+	var selected_constraint = constr_to_edit.get_selected_id()
+	if selected_constraint == -1:
+		selected_asset.constrain_to = "None"
+	else:
+		selected_asset.constrain_to = constr_to_edit.get_item_text(selected_constraint)
+	
+	selected_constraint = constr_from_edit.get_selected_id()
+	if selected_constraint == -1:
+		selected_asset.constrain_from = "None"
+	else:
+		selected_asset.constrain_from = constr_from_edit.get_item_text(selected_constraint)
+	
 	selected_asset.scene.set_meta("name", selected_asset.asset_name)
 	selected_asset.scene.set_meta("thumbnail", selected_asset.thumbnail.get_image().get_data())
 	selected_asset.scene.set_meta("weight", selected_asset.weight)
 	selected_asset.scene.set_meta("sockets", selected_asset.sockets)
+	selected_asset.scene.set_meta("biomes", selected_asset.biomes)
+	selected_asset.scene.set_meta("constrain_to", selected_asset.constrain_to)
+	selected_asset.scene.set_meta("constrain_from", selected_asset.constrain_from)
 	if old_name != selected_asset.asset_name:
 		FileWorker.rename_scene(old_name, selected_asset.asset_name)
 	FileWorker.save_scene(selected_asset.asset_name, selected_asset.scene)
@@ -168,6 +239,17 @@ func save_asset():
 func reload_item_list():
 	item_list.clear()
 	assets = FileWorker.load_scenes()
+	
+	biomes = Biomes.load_biomes()
+	
+	var biome_array = []
+	for asset in assets.keys():
+		biome_array = []
+		for biome in biomes.keys():
+			if biomes[biome].has(asset):
+				biome_array.append(biome)
+		assets[asset].biomes = biome_array
+	
 	for scene_name in assets.keys():
 		item_list.add_item(scene_name, assets[scene_name].thumbnail)
 
@@ -246,74 +328,105 @@ func _on_delete_dialog_confirmed():
 	for key in assets.keys():
 		item_list.add_item(key, assets[key].thumbnail)
 
-func init_socket_creator(socket : String, sockets_list : Dictionary):
+func init_socket_creator(socket : String, sockets_list : Dictionary, asset : AssetBlock):
 	previous_edit_string = sockets_list[socket].text
-	socket_creator_dialog.init_list(assets, sockets_list[socket])
-	socket_creator_dialog.visible = true
 	socket_creator_dialog.socket_key = socket
+	socket_creator_dialog.init_list(assets, sockets_list[socket], asset)
+	socket_creator_dialog.visible = true
+
+func init_biome_selector():
+
+	biome_editor.visible = true
+	pass
 
 func _on_socket_edit_u_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("U", asset_sockets)
+	init_socket_creator("U", asset_sockets, selected_asset)
 
 func _on_socket_edit_d_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("D", asset_sockets)
+	init_socket_creator("D", asset_sockets, selected_asset)
 
 
 func _on_socket_edit_f_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("F", asset_sockets)
+	init_socket_creator("F", asset_sockets, selected_asset)
 
 
 func _on_socket_edit_b_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("B", asset_sockets)
+	init_socket_creator("B", asset_sockets, selected_asset)
+
 
 
 func _on_socket_edit_l_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("L", asset_sockets)
+	init_socket_creator("L", asset_sockets, selected_asset)
+
 
 
 func _on_socket_edit_r_focus_entered():
 	if selected_asset == null:
 		print("no asset selected")
 		return
-	init_socket_creator("R", asset_sockets)
+	init_socket_creator("R", asset_sockets, selected_asset)
+
 
 
 
 
 func _asset_importer_socket_U_focus():
-	init_socket_creator("U", model_sockets)
+	init_socket_creator("U", model_sockets, imported_asset)
 
 
 func _asset_importer_socket_D_focus():
-	init_socket_creator("D", model_sockets)
+	init_socket_creator("D", model_sockets, imported_asset)
+
 
 
 func _asset_importer_socket_F_focus():
-	init_socket_creator("F", model_sockets)
+	init_socket_creator("F", model_sockets, imported_asset)
+
 
 
 func _asset_importer_socket_B_focus():
-	init_socket_creator("B", model_sockets)
+	init_socket_creator("B", model_sockets, imported_asset)
+
 
 
 func _asset_importer_socket_R_focus():
-	init_socket_creator("R", model_sockets)
+	init_socket_creator("R", model_sockets, imported_asset)
+
 
 
 func _asset_importer_socket_L_focus():
-	init_socket_creator("L", model_sockets)
+	init_socket_creator("L", model_sockets, imported_asset)
+
+
+
+func _on_biome_edit_text_changed(_new_text):
+	changes_made = true
+
+
+func _on_biome_edit_focus_entered():
+	init_biome_selector()
+	
+
+
+
+func _on_constraint_from_select_item_selected(_index):
+	changes_made = true
+
+
+func _on_constraint_to_select_item_selected(_index):
+	changes_made = true

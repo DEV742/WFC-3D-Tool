@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://b8mijgxv7efs4"]
 
-[ext_resource type="PackedScene" uid="uid://dgpss1cilthug" path="res://Scenes/menu.tscn" id="1_1s7fh"]
+[ext_resource type="PackedScene" uid="uid://dniry0r343es0" path="res://Scenes/menu.tscn" id="1_1s7fh"]
 [ext_resource type="Script" path="res://Scripts/ViewportTools.gd" id="1_4hk36"]
 [ext_resource type="Shader" path="res://Util/blur_shader.gdshader" id="1_a8q8f"]
 [ext_resource type="PackedScene" uid="uid://g3ijwfms4ixu" path="res://Scenes/render.tscn" id="2_bljjp"]

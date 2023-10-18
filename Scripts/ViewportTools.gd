@@ -9,6 +9,7 @@ extends Node
 
 #This variable enables the model import preview
 var model_demo_mode = false
+var demo_model : Node3D
 
 func _enter_demo_mode():
 	model_demo_mode = true
@@ -16,6 +17,7 @@ func _enter_demo_mode():
 	blur_layer.visible = true
 
 func _set_demo_model(model : Node3D):
+	demo_model = model
 	demo_model_container.visible = true
 	demo_model_container.add_child(model)
 	model.visible = true
@@ -23,6 +25,7 @@ func _set_demo_model(model : Node3D):
 func _exit_demo_mode():
 	demo_model_container.visible = false
 	model_demo_mode = false
+	demo_model_container.remove_child(demo_model)
 	grid.visible = true
 	blur_layer.visible = false
 	
