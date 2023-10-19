@@ -210,6 +210,45 @@ grow_vertical = 0
 step = 0.1
 rounded = true
 
+[node name="ExportButton" type="Button" parent="MainMenu/Panel/TabContainer/Generation"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.037
+anchor_top = 0.923
+anchor_right = 0.968
+anchor_bottom = 0.923
+offset_left = -0.0710154
+offset_top = 0.129944
+offset_right = -0.0710449
+offset_bottom = 0.189941
+grow_horizontal = 2
+grow_vertical = 0
+text = "Export"
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMenu/Panel/TabContainer/Generation"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.039
+anchor_top = 0.618
+anchor_right = 0.965
+anchor_bottom = 0.863
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="MainMenu/Panel/TabContainer/Generation/MarginContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ExportWizard" type="FileDialog" parent="MainMenu/Panel/TabContainer/Generation"]
+title = "Export"
+initial_position = 1
+size = Vector2i(600, 450)
+ok_button_text = "Export"
+access = 2
+filters = PackedStringArray("*.gltf", "*.glb")
+
 [node name="Assets" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 570)
@@ -1211,6 +1250,9 @@ alignment = 1
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/SelectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_select_all_button_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/DeselectAllButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_deselect_all_button_pressed"]
 [connection signal="toggled" from="MainMenu/Panel/TabContainer/Generation/CleanUpButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_clean_up_button_toggled"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/ExportButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_export_button_pressed"]
+[connection signal="close_requested" from="MainMenu/Panel/TabContainer/Generation/ExportWizard" to="MainMenu/Panel/TabContainer/Generation" method="_on_export_wizard_close_requested"]
+[connection signal="file_selected" from="MainMenu/Panel/TabContainer/Generation/ExportWizard" to="MainMenu/Panel/TabContainer/Generation" method="_on_export_wizard_file_selected"]
 [connection signal="item_clicked" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_clicked"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ItemList" to="MainMenu/Panel/TabContainer/Assets" method="_on_item_list_item_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/SaveButton" to="MainMenu/Panel/TabContainer/Assets" method="_on_save_button_pressed"]

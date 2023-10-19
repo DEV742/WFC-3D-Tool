@@ -14,6 +14,7 @@ var total_blocks : int
 var progress = 0.0
 var collapsed = 0.0
 var progress_bar : ProgressBar
+var export_button : Button
 var generate_button : Button
 
 
@@ -24,6 +25,8 @@ var grid_y
 var grid_z
 
 var biomes_enabled : bool
+
+var generation_finished = false
 
 var voronoi : Voronoi
 var solve_thread : Thread
@@ -135,6 +138,7 @@ func apply_custom_constraints():
 
 func solve():
 	clear_meshes()
+	generation_finished = false
 	solve_thread = Thread.new()
 	solve_thread.start(solve_multithreaded)
 
@@ -152,7 +156,9 @@ func solve_multithreaded():
 	solve_thread.call_deferred("wait_to_finish")
 	print("Done!")
 	progress_bar.call_deferred("set_visible", false)
+	export_button.call_deferred("set_visible", true)
 	generate_button.call_deferred("set_disabled", false)
+	generation_finished = true
 
 func iterate():
 	var min_ent_cell = get_min_entropy_cell()

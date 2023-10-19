@@ -3,11 +3,12 @@ extends Node3D
 @export var size_x : int
 @export var size_y : int
 @export var size_z : int
-
 var grid_outline = preload("res://Scenes/grid_outline.tscn")
 
 var grid : Dictionary
-
+var grid_container
+func _ready():
+	grid_container = get_node("../GridContainer")
 func create_grid():
 	for y in range(size_y):
 		for x in range(size_x):
@@ -15,7 +16,7 @@ func create_grid():
 				var key = Vector3(x,y,z)
 				var object = grid_outline.instantiate()
 				object.position = key
-				add_child(object)
+				grid_container.add_child(object)
 				grid[key] = object
 				
 

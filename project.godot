@@ -11,9 +11,12 @@ config_version=5
 [application]
 
 config/name="World-generation-tool"
+config/description="A 3D world generation tool using Wave Function Collapse algorithm."
 run/main_scene="res://Scenes/main_window.tscn"
 config/features=PackedStringArray("4.1", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/image="res://rat.png"
+config/icon="res://rat1.png"
+boot_splash/minimum_display_time=3000
 
 [display]
 

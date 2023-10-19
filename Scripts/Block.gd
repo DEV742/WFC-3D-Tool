@@ -14,10 +14,3 @@ var constrain_from : String
 #Format: [U, D, F, B, L, R]
 var sockets = {"U":"", "D":"", "F":"", "B":"", "L":"", "R":""}
 
-
-#TODO
-# > setMesh
-# > setWeight
-# > setName
-# > setSockets
-# > addSocket
