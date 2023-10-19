@@ -20,7 +20,10 @@ var result
 var assets_controller 
 
 @onready var progress_bar = $ProgressBar
+@onready var export_button = $ExportButton
 @onready var button = $GenerateButton
+
+@onready var export_wizard = $ExportWizard
 var biome_debug_gizmo = preload("res://Util/biome_debug.tscn")
 
 var settings : Settings
@@ -75,6 +78,7 @@ func _on_tab_container_tab_changed(_tab):
 
 func _on_generate_button_pressed():
 	progress_bar.visible = true
+	export_button.visible = false
 	for obj in objects:
 		obj.queue_free()
 	objects.clear()
@@ -94,6 +98,7 @@ func _on_generate_button_pressed():
 	wfc.grid_y = grid_y
 	wfc.grid_z = grid_z
 	wfc.progress_bar = progress_bar
+	wfc.export_button = export_button
 	wfc.generate_button = button
 	wfc.biomes_enabled = biomes_enabled
 	if biomes_enabled:
@@ -106,3 +111,29 @@ func _on_generate_button_pressed():
 
 func _on_clean_up_button_toggled(button_pressed):
 	clean_up = button_pressed
+
+
+func _on_export_button_pressed():
+	if wfc != null and wfc.generation_finished:
+		export_wizard.visible = true
+		
+
+
+func _on_export_wizard_close_requested():
+	export_wizard.visible = false
+
+func prepare_scene(scene_root : Node3D) -> Node3D:
+	var new_scene = Node3D.new()
+	for root_child in scene_root.get_children():
+		for child in root_child.get_children():
+			var copy = child.duplicate()
+			copy.position = child.get_global_position()
+			copy.rotation = child.get_global_rotation()
+			new_scene.add_child(copy, true)
+	return new_scene
+
+func _on_export_wizard_file_selected(path):
+	print("Selected path: " + path)
+	var root_node = grid_controller
+	var scene = prepare_scene(root_node)
+	FileWorker.export_scene(scene, path)

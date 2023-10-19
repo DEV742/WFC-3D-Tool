@@ -43,6 +43,18 @@ static func rename_scene(scene_to_rename: String, new_scene_name: String) -> boo
 	else:
 		return false
 
+
+static func export_scene(scene_root : Node, path : String) -> bool:
+	var gltf_doc = GLTFDocument.new()
+	var gltf_state = GLTFState.new()
+	var err = gltf_doc.append_from_scene(scene_root, gltf_state)
+	if  err == OK:
+		var write_err = gltf_doc.write_to_filesystem(gltf_state, path)
+		if write_err == OK:
+			print("File saved to: " + path)
+			return true
+	return false
+
 static func load_scenes() -> Dictionary:
 	var list = get_assets_list()
 	if list.is_empty():

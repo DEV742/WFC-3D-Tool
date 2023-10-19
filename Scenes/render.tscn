@@ -43,6 +43,8 @@ transform = Transform3D(0.707107, -0.413628, 0.573509, 0, 0.811064, 0.584958, -0
 environment = SubResource("Environment_tjywt")
 current = true
 
+[node name="GridContainer" type="Node3D" parent="ModelContainer"]
+
 [node name="Camroot" type="Node3D" parent="."]
 script = ExtResource("2_53gn7")
 
