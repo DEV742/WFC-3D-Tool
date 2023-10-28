@@ -10,9 +10,7 @@ A procedural 3D game world generation tool based on wave function collapse algor
 - [X] Data structures needed for WFC
 - [X] Wave Function Collapse
 - [X] Voronoi algorithm - biome generation
-- [ ] Debug/Inspect tools
-- [ ] Select tool
-- [ ] Custom user script support
-- [ ] Export
+- [X] Debug/Inspect tools
+- [X] Export to .gltf
 
 Made for the bachelor's thesis at Wrocław University of Science and Technology by dev742
