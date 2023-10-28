@@ -9,7 +9,7 @@ var biomes = {}
 var assets = {}
 var assets_controller
 
-const save_path = "res://biomes.gen"
+const save_path = "user://Biomes/biomes.gen"
 
 func save_json():
 	var json = JSON.stringify(biomes)
@@ -55,8 +55,9 @@ static func load_biomes():
 func update_biome_list():
 	biome_list.clear()
 	
-	for key in biomes.keys():
-		biome_list.add_item(key)
+	if biomes != null:
+		for key in biomes.keys():
+			biome_list.add_item(key)
 
 func _on_add_button_pressed():
 	if not biomes.has(biome_name.text): 
@@ -102,7 +103,8 @@ func _on_biome_list_item_selected(index):
 func get_biomes():
 	biomes = Biomes.load_biomes()
 	var result = {}
-	for biome in biomes.keys():
-		if biomes[biome].size() != 0:
-			result[biome] = biomes[biome]
+	if biomes != null:
+		for biome in biomes.keys():
+			if biomes[biome].size() != 0:
+				result[biome] = biomes[biome]
 	return result

@@ -1,6 +1,6 @@
 extends Node
 class_name FileWorker
-
+const asset_path = "user://Imports/"
 static func load_gltf(path: String) -> Node:
 	var gltf_state = GLTFState.new()
 	var gltf_doc = GLTFDocument.new()
@@ -8,8 +8,9 @@ static func load_gltf(path: String) -> Node:
 	var fileBytes = PackedByteArray()
 	fileBytes = file.get_buffer(file.get_length())
 	
-	gltf_doc.append_from_buffer(fileBytes, "", gltf_state)
-	
+	var error = gltf_doc.append_from_buffer(fileBytes, "", gltf_state)
+	if error != OK:
+		print("Possible empty or corrupted model")
 	print(gltf_state.get_materials().size())
 	
 	var generated_node = gltf_doc.generate_scene(gltf_state)
@@ -18,7 +19,7 @@ static func load_gltf(path: String) -> Node:
 static func save_scene(scene_name: String, scene: Node) -> String:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(scene)
-	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	var path = asset_path + scene_name + ".tscn"
 	var err = ResourceSaver.save(packed_scene, path)
 	if err != OK:
 		print("Error while saving scene")
@@ -26,7 +27,7 @@ static func save_scene(scene_name: String, scene: Node) -> String:
 	return path
 
 static func delete_scene(scene_name: String) -> bool:
-	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	var path = asset_path + scene_name + ".tscn"
 	var err = DirAccess.remove_absolute(path)
 	if err == OK:
 		return true
@@ -34,8 +35,8 @@ static func delete_scene(scene_name: String) -> bool:
 		return false
 
 static func rename_scene(scene_to_rename: String, new_scene_name: String) -> bool:
-	var path = "res://Scenes/Assets/" + scene_to_rename + ".tscn"
-	var path_new = "res://Scenes/Assets/" + new_scene_name + ".tscn"
+	var path = asset_path + scene_to_rename + ".tscn"
+	var path_new = asset_path + new_scene_name + ".tscn"
 	var err = DirAccess.rename_absolute(path, path_new)
 	
 	if err == OK:
@@ -73,6 +74,8 @@ static func load_scenes() -> Dictionary:
 			asset.constrain_from = scene.get_meta("constrain_from")
 		asset.scene = scene
 		var bytes = scene.get_meta("thumbnail")
+		if scene.has_meta("edge_block"):
+			asset.edge_block = scene.get_meta("edge_block")
 		if bytes != null:
 			var img = Image.create_from_data(50,50, false, Image.FORMAT_RGBA8, bytes)
 			var tex = ImageTexture.create_from_image(img)
@@ -84,7 +87,7 @@ static func load_scenes() -> Dictionary:
 
 
 static func get_assets_list() -> Dictionary:
-	var dir = DirAccess.open("res://Scenes/Assets/")
+	var dir = DirAccess.open(asset_path)
 	if dir == null:
 		return {}
 	var assets = {}
@@ -97,12 +100,12 @@ static func get_assets_list() -> Dictionary:
 	return assets
 
 static func load_scene(scene_name : String) -> Node:
-	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	var path = asset_path + scene_name + ".tscn"
 	var node = load(path).instantiate()
 	return node
 
 static func scene_exists(scene_name : String) -> bool:
-	var path = "res://Scenes/Assets/" + scene_name + ".tscn"
+	var path = asset_path + scene_name + ".tscn"
 	if FileAccess.file_exists(path):
 		return true
 	else:

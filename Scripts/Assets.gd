@@ -20,7 +20,8 @@ var imported_asset : AssetBlock
 @onready var name_taken_dialog = $NameTakenDialog
 @onready var not_saved_dialog = $NotSavedDialog
 @onready var socket_creator_dialog = $SocketCreator
-
+@onready var name_reserved_dialog = $NameReserved
+@onready var illegal_char_dialog = $IllegalChar
 #Settings fields
 @onready var asset_name = $NameEdit
 @onready var asset_weight = $WeightEdit
@@ -42,7 +43,7 @@ var previous_edit_string = ""
 
 var biomes
 @export var biomes_controller : Biomes
-
+@onready var edge_block_edit = $EdgeBlock
 @onready var constr_to_edit = $ConstrainToLabel/ConstraintToSelect
 @onready var constr_from_edit = $ConstrainFromLabel/ConstraintFromSelect
 
@@ -53,6 +54,8 @@ var biomes
 @onready var constr_to = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrToLabel/ConstraintToSelect
 @onready var constr_from = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/ConstrFromLabel/ConstraintFromSelect
 
+@onready var edge_block_importer = $AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel/EdgeBlockImport
+
 @onready var model_sockets = {
 	"U" : $AssetImporter/MarginContainer/Panel/HSplitContainer/RightPanel/Socket_U,
 	"D" : $AssetImporter/MarginContainer/Panel/HSplitContainer/RightPanel/Socket_D,
@@ -61,6 +64,7 @@ var biomes
 	"L" : $AssetImporter/MarginContainer/Panel/HSplitContainer/RightPanel/Socket_L,
 	"R" : $AssetImporter/MarginContainer/Panel/HSplitContainer/RightPanel/Socket_R
 }
+var illegal_chars = ["#", "%", "&", "{", "}", "\\", "<", ">", "*", "?", "/", "$", "!", "'", "\"", ":", "@", "+", "`", "|", "="]
 
 signal enter_demo
 signal exit_demo
@@ -109,7 +113,6 @@ func _on_add_button_pressed():
 	#file dialog fields can be cleared here
 
 func _on_import_save_button_pressed():
-	
 	var fields_validated = true
 	if model_name.text == "" or model_weight.text == "":
 		fields_validated = false
@@ -124,6 +127,16 @@ func _on_import_save_button_pressed():
 		name_taken_dialog.visible = true
 		return
 	
+	if model_name.text == "Empty block":
+		name_reserved_dialog.visible = true
+		return
+	
+	for character in model_name.text:
+		if illegal_chars.has(character):
+			illegal_char_dialog.visible = true
+			return
+	
+	
 	if fields_validated:
 		var img = thumb_camera.get_viewport().get_texture().get_image()
 		img.resize(50, 50)
@@ -136,6 +149,7 @@ func _on_import_save_button_pressed():
 		imported_asset.thumbnail = tex
 		imported_asset.sockets = socket_values
 		imported_asset.scene = generated_node
+		imported_asset.edge_block = edge_block_importer.button_pressed
 		var selected_item = constr_from.get_selected_id()
 		if selected_item == -1:
 			imported_asset.constrain_from = "None"
@@ -154,6 +168,7 @@ func _on_import_save_button_pressed():
 		generated_node.set_meta("biomes", imported_asset.biomes)
 		generated_node.set_meta("constrain_to", imported_asset.constrain_to)
 		generated_node.set_meta("constrain_from", imported_asset.constrain_from)
+		generated_node.set_meta("edge_block", imported_asset.edge_block)
 		var path = FileWorker.save_scene(imported_asset.asset_name, generated_node)
 		imported_asset.path = path
 		assets[imported_asset.asset_name] = imported_asset
@@ -189,6 +204,7 @@ func load_asset_data(index):
 		for i in range(constr_to_edit.item_count):
 			if constr_to_edit.get_item_text(i) == selected.constrain_to:
 				constr_to_edit.select(i)
+	edge_block_edit.set_pressed_no_signal(selected.edge_block)
 	
 	for socket_key in asset_sockets.keys():
 		asset_sockets[socket_key].set_text(selected.sockets[socket_key])
@@ -200,12 +216,22 @@ func _on_save_button_pressed():
 	if FileWorker.scene_exists(asset_name.text) and selected_asset.asset_name != asset_name.text:
 		name_taken_dialog.visible = true
 		return
+	if asset_name.text == "Empty block":
+		name_reserved_dialog.visible = true
+		asset_name.text = selected_asset.asset_name
+		return
+	for character in asset_name.text:
+		if illegal_chars.has(character):
+			illegal_char_dialog.visible = true
+			asset_name.text = selected_asset.asset_name
+			return
 	save_asset()
 
 func save_asset():
 	var old_name = selected_asset.asset_name
 	selected_asset.asset_name = asset_name.text
 	selected_asset.weight = asset_weight.text
+	selected_asset.edge_block = edge_block_edit.button_pressed
 	var selected_constraint = constr_to_edit.get_selected_id()
 	if selected_constraint == -1:
 		selected_asset.constrain_to = "None"
@@ -225,6 +251,7 @@ func save_asset():
 	selected_asset.scene.set_meta("biomes", selected_asset.biomes)
 	selected_asset.scene.set_meta("constrain_to", selected_asset.constrain_to)
 	selected_asset.scene.set_meta("constrain_from", selected_asset.constrain_from)
+	selected_asset.scene.set_meta("edge_block", selected_asset.edge_block)
 	if old_name != selected_asset.asset_name:
 		FileWorker.rename_scene(old_name, selected_asset.asset_name)
 	FileWorker.save_scene(selected_asset.asset_name, selected_asset.scene)
@@ -430,3 +457,8 @@ func _on_constraint_from_select_item_selected(_index):
 
 func _on_constraint_to_select_item_selected(_index):
 	changes_made = true
+
+
+func _on_edge_block_toggled(_button_pressed):
+	changes_made = true
+

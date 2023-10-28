@@ -10,6 +10,7 @@ var scene : Node
 var biomes : Array
 var constrain_to : String
 var constrain_from : String
+var edge_block : bool
 
 #Format: [U, D, F, B, L, R]
 var sockets = {"U":"", "D":"", "F":"", "B":"", "L":"", "R":""}

@@ -24,13 +24,13 @@ mouse_default_cursor_shape = 6
 [node name="BlurLayer" type="ColorRect" parent="SubViewportContainer"]
 visible = false
 material = SubResource("ShaderMaterial_dbd4d")
-custom_minimum_size = Vector2(1200, 800)
+custom_minimum_size = Vector2(1600, 900)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="SubViewport" parent="SubViewportContainer" instance=ExtResource("2_bljjp")]
 handle_input_locally = false
-size = Vector2i(1152, 648)
+size = Vector2i(1600, 900)
 render_target_update_mode = 4
 
 [node name="Control" parent="." instance=ExtResource("1_1s7fh")]

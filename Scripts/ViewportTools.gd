@@ -18,9 +18,10 @@ func _enter_demo_mode():
 
 func _set_demo_model(model : Node3D):
 	demo_model = model
-	demo_model_container.visible = true
-	demo_model_container.add_child(model)
-	model.visible = true
+	if model != null:
+		demo_model_container.visible = true
+		demo_model_container.add_child(model)
+		model.visible = true
 
 func _exit_demo_mode():
 	demo_model_container.visible = false

@@ -16,8 +16,9 @@ var collapsed = 0.0
 var progress_bar : ProgressBar
 var export_button : Button
 var generate_button : Button
+var status_label : Label
 
-
+var animation_delay = 0.0
 var biomes = {}
 
 var grid_x
@@ -27,6 +28,7 @@ var grid_z
 var biomes_enabled : bool
 
 var generation_finished = false
+var display_entropy = false
 
 var voronoi : Voronoi
 var solve_thread : Thread
@@ -35,12 +37,12 @@ const OPPOSITE_DIRECTIONS = {"+X":"-X", "+Y":"-Y", "+Z":"-Z", "-X":"+X", "-Y":"+
 
 var rng = RandomNumberGenerator.new()
 
-
 var objects = []
 var enable = false
 var grid_root
 var assets = {}
 var created_objects_pos = []
+
 func clear_meshes():
 	created_objects_pos.clear()
 	for mesh in objects:
@@ -48,26 +50,30 @@ func clear_meshes():
 		mesh.queue_free()
 	objects = []
 
+
 func visualize():
 	collapsed = 0
-	for x in range(grid_x):
-			for y in range(grid_y):
-				for z in range(grid_z):
-					var asset_name
-					var obj
-					var cell = grid[x][y][z]
-					
-					if cell.collapsed:
-						collapsed += 1
-					if cell.chosen_block != null and cell.collapsed and cell.chosen_block.asset_name != "Empty block" and not created_objects_pos.has(cell.pos):
-						asset_name = cell.chosen_block.asset_name
-						obj = assets[asset_name].scene.duplicate()
-						objects.append(obj)
-						obj.position = cell.pos
-						obj.rotate_y(deg_to_rad(90*cell.rotation))
-						if not created_objects_pos.has(cell.pos):
-							created_objects_pos.append(cell.pos)
-						grid_root.call_deferred("add_child", obj)
+	if display_entropy:
+		for item in stack:
+			grid_root.call_deferred("update_label", item.x, item.y, item.z, grid[item.x][item.y][item.z].entropy, float(grid[item.x][item.y][item.z].entropy)/float(len(prototypes)))
+	
+	for y in range(grid_y):
+		for x in range(grid_x):
+			for z in range(grid_z):
+				var asset_name
+				var obj
+				var cell = grid[x][y][z]
+				if cell.collapsed:
+					collapsed += 1
+				if cell.chosen_block != null and cell.collapsed and cell.chosen_block.asset_name != "Empty block" and not created_objects_pos.has(cell.pos):
+					asset_name = cell.chosen_block.asset_name
+					obj = assets[asset_name].scene.duplicate()
+					objects.append(obj)
+					obj.position = cell.pos
+					obj.rotate_y(deg_to_rad(90*cell.rotation))
+					if not created_objects_pos.has(cell.pos):
+						created_objects_pos.append(cell.pos)
+					grid_root.call_deferred("add_child", obj)
 	progress = float((float(collapsed)/float(total_blocks)) * 100.0)
 	progress_bar.call_deferred("set_value", progress)
 	await grid_root.get_tree().process_frame
@@ -77,15 +83,20 @@ func visualize():
 #no bottom blocks above y=0
 #no middle blocks on edges of the grid
 func apply_custom_constraints():
-	
+	var blocks_processed = 0
+	progress_bar.call_deferred("set_value", 0)
 	for x in range(grid_x):
 		for y in range(grid_y):
 			for z in range(grid_z):
+				blocks_processed += 1
+				progress_bar.call_deferred("set_value", float(float(blocks_processed)/float(total_blocks) * 100))
 				var coords = Vector3(x, y, z)
 				var protos = grid[x][y][z].possibilities
+				#print("Cell " + str(coords) + " entropy before:" + str(len(protos)))
 				if y == grid_y - 1:  # constrain top layer to not contain any uncapped prototypes
 					for proto in protos.duplicate():
-						if not proto.sockets["+Y"] == "-1":
+						var custom_constraint = proto.constrain_from
+						if not proto.valid_neighbours["+Y"].has("Empty block") or custom_constraint == WFC.CONSTRAINT_TOP:
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
@@ -106,60 +117,71 @@ func apply_custom_constraints():
 				if y == 0:  # constrain bottom layer so we don't start with any top-cliff parts at the bottom
 					for proto in protos.duplicate():
 						var custom_constraint = proto.constrain_from
-						if proto.sockets["+Y"] != "-1" or (custom_constraint == WFC.CONSTRAINT_BOTTOM):
+						if not proto.valid_neighbours["-Y"].has("Empty block") or (custom_constraint == WFC.CONSTRAINT_BOTTOM):
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if x == grid_x - 1: # constrain +x
 					for proto in protos.duplicate():
-						if not proto.sockets["+X"] == "-1":
+						if not proto.edge_block:#.valid_neighbours["+X"].has("Empty block"):
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if x == 0: # constrain -x
 					for proto in protos.duplicate():
-						if not proto.sockets["-X"] == "-1":
+						if not proto.edge_block:#.valid_neighbours["-X"].has("Empty block"):
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if z == grid_z - 1: # constrain +z
 					for proto in protos.duplicate():
-						if not proto.sockets["+Z"] == "-1":
+						if not proto.edge_block:#.valid_neighbours["+Z"].has("Empty block"):
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if z == 0: # constrain -z
 					for proto in protos.duplicate():
-						if not proto.sockets["-Z"] == "-1":
+						if not proto.edge_block:#proto.valid_neighbours["-Z"].has("Empty block"):
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
+				#print("Cell " + str(coords) + " entropy after:" + str(len(protos)))
 	propagate(false)
 
 func solve():
 	clear_meshes()
 	generation_finished = false
+	status_label.text = "Preparing solver thread..."
 	solve_thread = Thread.new()
+	print("Max entropy: " + str(len(prototypes)))
 	solve_thread.start(solve_multithreaded)
 
-
 func solve_multithreaded():
+	status_label.call_deferred("set_text", "Applying custom constraints...")
 	apply_custom_constraints()
+	progress_bar.call_deferred("set_value", 0)
 	if biomes_enabled:
+		status_label.call_deferred("set_text", "Placing biomes...")
 		voronoi = Voronoi.new()
-		voronoi.init(grid, biomes, grid_x, grid_y, grid_z)
+		voronoi.init(grid, biomes, grid_x, grid_y, grid_z, display_entropy, grid_root, len(prototypes))
 		grid = voronoi.solve()
 	
+	status_label.call_deferred("set_text", "Collapsing the Wave Function...")
 	while not is_collapsed():
+		await grid_root.get_tree().create_timer(animation_delay/1000).timeout
 		iterate()
 		visualize()
+	status_label.call_deferred("set_text", "Finishing up...")
 	solve_thread.call_deferred("wait_to_finish")
 	print("Done!")
+	if display_entropy:
+		grid_root.call_deferred("clear_labels")
 	progress_bar.call_deferred("set_visible", false)
 	export_button.call_deferred("set_visible", true)
 	generate_button.call_deferred("set_disabled", false)
 	generation_finished = true
-
+	status_label.call_deferred("set_text", "Status: Ready")
+	
 func iterate():
 	var min_ent_cell = get_min_entropy_cell()
 	collapse(min_ent_cell)
@@ -177,36 +199,22 @@ func propagate(co_ords):
 func constrain(cell : Cell, prototype : Prototype):
 	cell.possibilities.erase(prototype)
 	cell.evaluate_entropy()
+	if display_entropy:
+		grid_root.call_deferred("update_label", cell.pos.x, cell.pos.y, cell.pos.z, str(cell.entropy), float(cell.entropy)/float(len(prototypes)))
 	cell.update_sockets()
-
-
-func check_rules(current_cell : Cell, proto : Prototype, direction_key):
-	var opposite = {"L" : "R", "R" : "L"}
-	var proto_socket = str(proto.sockets[OPPOSITE_DIRECTIONS[direction_key]])
-	if (str(proto_socket[len(proto_socket)-1]).to_upper() == "L" or str(proto_socket[len(proto_socket)-1]).to_upper() == "R"):
-			var p_socket = proto_socket.substr(0, len(proto_socket)-1)
-			var p_letter = proto_socket.substr(len(proto_socket)-1, len(proto_socket)).to_upper()
-			var opposite_socket = p_socket + opposite[p_letter].to_lower()
-			if current_cell.sockets[direction_key].has(opposite_socket):
-				return false
-			if current_cell.sockets[direction_key].has(proto_socket):
-				return true
-	if not current_cell.sockets[direction_key].has(proto.sockets[OPPOSITE_DIRECTIONS[direction_key]]):
-		return true
-	
 	
 func propagate_to(current_cell : Cell, target_cell : Cell, direction_key : String):
-	if current_cell.pos != target_cell.pos:
+	if current_cell.pos != target_cell.pos and not target_cell.collapsed:
 		var pool = target_cell.possibilities.duplicate()
 		for possibility in pool:
-			if not target_cell.collapsed and check_rules(current_cell, possibility, direction_key):
+			if not current_cell.valid_neighbours[direction_key].has(possibility.name):
 				constrain(target_cell, possibility)
-				if not target_cell.pos in stack and not target_cell.collapsed:
+				if not target_cell.pos in stack:
 					stack.append(target_cell.pos)
 
 
 func pick_random_cell_weighted(probabilities : Array) -> Prototype:
-	rng.randomize()	
+	rng.randomize()
 	var total_weight = 0.0
 	
 	for prob in probabilities:
@@ -227,6 +235,10 @@ func collapse(cell : Cell):
 	while proto == null and len(cell.possibilities) > 0:
 		proto = pick_random_cell_weighted(cell.possibilities)
 	cell.collapse(proto)
+	
+	if display_entropy:
+		grid_root.call_deferred("update_label", cell.pos.x, cell.pos.y, cell.pos.z, "1", 1.0/float(len(prototypes)))
+	
 	if not stack.has(cell.pos):
 		stack.append(cell.pos)
 
@@ -248,17 +260,18 @@ func get_min_entropy_cell():
 	var pos = get_random_cell()
 	var min_ent_cell = grid[pos.x][pos.y][pos.z]
 	var min_ent = INF
-	for x in range(grid_x):
-		for y in range(grid_y):
+	for y in range(grid_y):
+		for x in range(grid_x):
 			for z in range(grid_z):
 				if grid[x][y][z].entropy < min_ent and not grid[x][y][z].collapsed:
 					min_ent_cell = grid[x][y][z]
 					min_ent = min_ent_cell.entropy
 	return min_ent_cell
 
+
 func is_collapsed() -> bool:
-	for x in range(grid_x):
-		for y in range(grid_y):
+	for y in range(grid_y):
+		for x in range(grid_x):
 			for z in range(grid_z):
 				if not grid[x][y][z].collapsed:
 					return false
@@ -283,6 +296,7 @@ func neighbors(cell : Cell):
 		n["+Z"] = grid[pos.x][pos.y][pos.z+1]
 	if pos.z - 1 >= 0:
 		n["-Z"] = grid[pos.x][pos.y][pos.z-1]
+	#print(n)
 	return n
 	
 func initialize(pool : Dictionary):
@@ -295,9 +309,8 @@ func initialize(pool : Dictionary):
 	progress_bar.call_deferred("set_value", 0)
 	grid = []
 	stack = []
-	for key in pool.keys():
-		prototypes.append_array(Prototype.generate_from_asset(pool[key]))
-	prototypes.append(Prototype.generate_empty())
+	prototypes.append_array(Prototype.generate_protos(pool))
+	
 	grid.resize(grid_x)
 	for x in range(grid_x):
 		grid[x] = []
@@ -311,4 +324,6 @@ func initialize(pool : Dictionary):
 				grid[x][y][z].possibilities = prototypes.duplicate()
 				grid[x][y][z].entropy = len(prototypes)
 				grid[x][y][z].update_sockets()
+	if display_entropy:
+		grid_root.init_labels(len(prototypes))
 	return grid

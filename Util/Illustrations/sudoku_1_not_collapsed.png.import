@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cupaugvk0hvx"
-path="res://.godot/imported/rat.png-b5409c26efb8da1cdf3c9e0dbf6fcf1d.ctex"
+uid="uid://bp05ttjkjx476"
+path="res://.godot/imported/sudoku_1_not_collapsed.png-d0d0a16cc2a290dc9120ab1a4ebb3e70.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://rat.png"
-dest_files=["res://.godot/imported/rat.png-b5409c26efb8da1cdf3c9e0dbf6fcf1d.ctex"]
+source_file="res://Util/Illustrations/sudoku_1_not_collapsed.png"
+dest_files=["res://.godot/imported/sudoku_1_not_collapsed.png-d0d0a16cc2a290dc9120ab1a4ebb3e70.ctex"]
 
 [params]
 

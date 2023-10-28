@@ -1,13 +1,25 @@
-[gd_scene load_steps=11 format=3 uid="uid://dniry0r343es0"]
+[gd_scene load_steps=16 format=3 uid="uid://dniry0r343es0"]
 
 [ext_resource type="Theme" uid="uid://dna37blibu61" path="res://Themes/dark_default_theme.tres" id="1_dsxom"]
 [ext_resource type="Script" path="res://Scripts/Assets.gd" id="2_27f4q"]
 [ext_resource type="Script" path="res://Scripts/Generation.gd" id="2_lipvx"]
+[ext_resource type="Script" path="res://Scripts/Start.gd" id="2_o0atw"]
+[ext_resource type="LabelSettings" uid="uid://o17uppv38ee0" path="res://Util/label.tres" id="3_gy0om"]
 [ext_resource type="PackedScene" uid="uid://g3ijwfms4ixu" path="res://Scenes/render.tscn" id="4_sa1rd"]
 [ext_resource type="Script" path="res://Scripts/SocketCreator.gd" id="5_1m84e"]
 [ext_resource type="Script" path="res://Scripts/BiomeEditor.gd" id="6_5huri"]
 [ext_resource type="Script" path="res://Scripts/Settings.gd" id="6_82lwa"]
 [ext_resource type="Script" path="res://Scripts/Biomes.gd" id="6_q8yfc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_q3qsi"]
+outline_size = 11
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4
+shadow_offset = Vector2(2, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vlc66"]
+font_size = 12
+font_color = Color(0.670588, 0.670588, 0.670588, 1)
 
 [sub_resource type="InputEventKey" id="InputEventKey_sqhhr"]
 keycode = 32
@@ -15,12 +27,22 @@ keycode = 32
 [sub_resource type="Shortcut" id="Shortcut_jqs3k"]
 events = [SubResource("InputEventKey_sqhhr")]
 
+[sub_resource type="LabelSettings" id="LabelSettings_imfhw"]
+font_size = 15
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 3
+shadow_color = Color(0.203922, 0.203922, 0.203922, 0)
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 814.0
+offset_left = 1170.0
+offset_top = 25.0
+offset_right = -30.0
+offset_bottom = -25.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -47,8 +69,354 @@ offset_right = -20.0
 offset_bottom = -17.0
 grow_horizontal = 2
 tab_alignment = 1
+use_hidden_tabs_for_min_size = true
+
+[node name="Start" type="Control" parent="MainMenu/Panel/TabContainer"]
+layout_mode = 2
+script = ExtResource("2_o0atw")
+
+[node name="Panel" type="Panel" parent="MainMenu/Panel/TabContainer/Start"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WelcomeLabel" type="Label" parent="MainMenu/Panel/TabContainer/Start/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.029
+anchor_top = 0.01
+anchor_right = 0.975
+anchor_bottom = 0.01
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "Welcome to the WFC 3D tool!
+"
+label_settings = SubResource("LabelSettings_q3qsi")
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 1
+
+[node name="InfoLabel" type="Label" parent="MainMenu/Panel/TabContainer/Start/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.029
+anchor_top = 0.049
+anchor_right = 0.975
+anchor_bottom = 0.078
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "If this is your first time here, here are some materials that might help :)"
+label_settings = SubResource("LabelSettings_vlc66")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+text_overrun_behavior = 1
+
+[node name="WFCInfo" type="Button" parent="MainMenu/Panel/TabContainer/Start/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.118
+anchor_right = 0.975
+anchor_bottom = 0.118
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "What is WFC?"
+
+[node name="ModelDesign" type="Button" parent="MainMenu/Panel/TabContainer/Start/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.177
+anchor_right = 0.975
+anchor_bottom = 0.177
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "How to design 3D models for WFC"
+
+[node name="GuideButton" type="Button" parent="MainMenu/Panel/TabContainer/Start/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.235
+anchor_right = 0.975
+anchor_bottom = 0.235
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "How to use this program"
+
+[node name="WFCInfo" type="Window" parent="MainMenu/Panel/TabContainer/Start"]
+title = "What is WFC?"
+position = Vector2i(15, 36)
+size = Vector2i(1120, 825)
+visible = false
+unresizable = true
+always_on_top = true
+popup_window = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MainMenu/Panel/TabContainer/Start/WFCInfo"]
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.02
+anchor_right = 0.99
+anchor_bottom = 0.99
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[center][b][font_size=23]What is WFC and why is it used for procedural game world generation?[/font_size][/b][/center]
+[p][b]WFC (Wave Function Collapse)[/b] is a process of reducing or [i] collapsing [/i] the superposition of states (in our case, a state is a possible object for the current cell). While the concept is derived from quantum mechanics, our implementation is way simpler and does not require any deep knowledge apart from some spatial [rainbow freq=1.0 sat=0.8 val=0.8]imagination[/rainbow] and some basic 3D modelling skills :)[/p]
+
+[p][b]Wave Function Collapse[/b] is an algorithm(or even a family of algorithms) that allows to generate game worlds of nearly any complexity and size from segments - 3d models with a certain set of rules (valid neighbours, sockets on every side of the model etc.) that the will be checked to make sure that there are no mismatching segments next to each other: we don't want your highways to end abruptly and your trees to grow out of the water - unless this is exactly what you want. [/p]
+
+[p][b][font_size=23]Sudoku[/font_size][/b]
+A good way to explain WFC is to explain Sudoku.
+Lets go for a tiny 4x4 Sudoku where there are 4 2x2 corner squares and the number range is 1 to 4. For the ease of demonstration, let's start with an empty one:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_empty.png[/img]
+[/center]
+
+The classic Sudoku rules for this grid size would be:
+[ul]
+Each cell can contain a digit from the following range: [b]{1, 2, 3, 4}[/b]
+Each number can appear only once in a corner 2x2 block
+Each number can appear only once in a column
+Each number can appear only once in a row
+[/ul]
+
+As you may know, Sudoku can be hard, especially without notes, so lets write every possible number to every cell as a note - this will help us keep track of what digits can be in every cell. (And when there is only one digit left in the notes the only thing left to do is to write it in the cell and move on)
+[center]
+[img width=300]res://Util/Illustrations/sudoku_notes.png[/img]
+[/center]
+And the same is going on in the WFC algorithm: every cell of the grid is populated by every possible segment(every possible rotation of it), so in the end each cell contains the set of all the segments there are.
+As was noted in the beginning of this guide, the WFC algorithm has its roots in the domain of quantum physics, so there are a couple of terms that need to be explained before we proceed as these will be tossed around:
+[ul]
+[b]State[/b] - in WFC context: one of the possible occupants of the cell, e.g. we start with lots of states possible to be in one cell and we try to reduce those to just one state - a single 3D model that can occupy the cell
+[b]Entropy[/b] - in the quantum physics context - the measure of randomness, disorder, uncertainty; in WFC context - the [i]uncertainty[/i] of a grid cell i.e. the amount of a possible states a cell can be occupied by, e.g. we strive to get the entropy down to 1 (a single possible state of a cell). [b]So our little Sudoku grid has each cells entropy of 4 since there can be any of 4 digits.[/b]
+[b]Propagation[/b] - the process of updating the neighbouring cells to the one that was recently altered, e.g. in an empty Sudoku with notes (as above), we put the number X in a certain cell, we then have to go through the cells that, according to the rules, now can not have the number X and remove it from the cells' notes
+[b]Constraint[/b] - the process of removing a possible state from the cell, e.g. from the above example, the act of removing the number X from the sudoku cells' notes is constraint
+[b]Collapse[/b] - the process of constraining the cell to a single state, usually by choosing the random state from the cells possible ones.
+[/ul]
+
+Now, when we're ready, let's solve the Sudoku using the same order of steps that lie in the heart of the [b]Wave Function Collapse algorithm[/b]:
+[ol]
+Pick the cell with the lowest entropy (the lowest amount of possible occupants). If there are several - pick the random one from them.
+Collapse it (reduce the possible occupants to just one by picking at random)
+Propagate (update the neighbouring cells to reflect the changes imposed by the collapsed cell) (constraint)
+Propagate further if needed
+When the chain of propagation is over - go to step 1.
+Rinse and repeat until every cell contains only one possible state.
+[/ol]
+Back to our Sudoku with those steps in mind:
+Doing step 1 of our algorithm, we can notice that every cell has the same entropy of 4, so let's pick a random cell and collapse it to.. let's say 1.
+I will highlight the cells that according to the rules will be affected by that choice (same row, same column, same block):
+[center]
+[img width=300]res://Util/Illustrations/sudoku_1_not_collapsed.png[/img]
+[/center]
+The same would happen in the WFC algorithm solving process: the computer would pick a cell from the pool of the cells with the lowest entropy and would collapse it to a single 3D model segment (this will be visualised by a segment appearing in the grid in the 3D view of the program).
+
+Now onto propagation! We go through every red cell and remove (constraint) 1 from its notes:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_1_collapsed.png[/img]
+[/center]
+The same goes for the WFC - the computer would remove every 3D model that does not pass the rule check from neighbouring cells.
+
+Now we can move on to the next iteration of the WFC-Sudoku algorithm - start again by picking the cell with the lowest amount of digits in its notes and collapsing it to any of the digits in the notes:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_2_not_collapsed.png[/img]
+[/center]
+Then propagate as much as needed:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_2_collapsed.png[/img]
+[/center]
+
+Then repeat the first two steps. Remember, that when picking the cell with the lowest entropy, if there are several cells with the same (lowest) entropy, you have to pick a random one from those cells:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_lowest_entropy.png[/img]
+[/center]
+And then onto step 2 & 3:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_3_not_collapsed.png[/img]
+[img width=300]res://Util/Illustrations/sudoku_3_collapsed.png[/img]
+[/center]
+Notice the cell highlighted in blue - this is the first cell to collapse on its own - it now has only one digit, meaning that there is only one possible state that it can have, thus let's make it have it, no need to look for a cell with the lowest entropy:
+After collapse and propagation is done (skipped for the sake of avoiding repetition), we can see the next lowest entropy cells (highlighted in orange)
+[center]
+[img width=300]res://Util/Illustrations/sudoku_last.png[/img]
+[/center]
+From here we can continue iterating until the whole grid is solved:
+[center]
+[img width=300]res://Util/Illustrations/sudoku_solved.png[/img]
+[/center]
+
+And congrats, we solved a 4x4 Sudoku! With the WFC algorithm the only obvious difference would be the rules, which usually affect only the adjacent neighbours (left, right, front, back, up, down), but sometimes a chain of neighbour-to-neighbour propagation is caused (e.g. collapsing the top cell to be the roof of a house - the cells below will all have to be propagated and collapsed to be the rest of the house)
+[/p]
+[right]As of now I have to leave this explanation in its current state due to the vast amount of things I have to tend to in the project. If any further explanation is needed - feel free to reach out.
+Best regards,
+dev742
+[img width=150]res://Util/rat_profile.png[/img][/right]"
+
+[node name="3DModelInfo" type="Window" parent="MainMenu/Panel/TabContainer/Start"]
+title = "How to design 3D models for WFC"
+position = Vector2i(15, 36)
+size = Vector2i(1120, 825)
+visible = false
+unresizable = true
+always_on_top = true
+popup_window = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MainMenu/Panel/TabContainer/Start/3DModelInfo"]
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.02
+anchor_right = 0.99
+anchor_bottom = 0.99
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[b][font_size=23]How to design models for WFC[/font_size][/b]
+Here's a list of requirements that need to be fullfilled to provide the best experience:
+[ul]
+Each model should fit into a 1x1x1 unit cube (1x1x1m cube in Blender)
+Each model has to have its origin directly in its center and be centered at (0,0,0) coordinates.
+Each model has to be consistent with the set (edges of the possibly adjacent objects should be at the same height unless explicitly desired)
+Each model has to be exported as .gltf (Blender provides this as default functionality)
+Each model has to have the same rotation around the UP axis (Z in Blender, Y in Godot) as its neighbouring segments (i.e. you have to be able to correctly connect the segments together without rotating them around the UP axis) 
+[/ul]
+
+An example, minimalistic set of data is presented below (each segment has not been rotated to match with the neighbouring one, each segment is inside a 1x1x1m cube for demonstration):
+
+[img]res://Util/Illustrations/example_set.png[/img]
+
+ "
+
+[node name="Guide" type="Window" parent="MainMenu/Panel/TabContainer/Start"]
+title = "How to use this program"
+position = Vector2i(15, 36)
+size = Vector2i(1120, 825)
+visible = false
+unresizable = true
+always_on_top = true
+popup_window = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="MainMenu/Panel/TabContainer/Start/Guide"]
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.02
+anchor_right = 0.99
+anchor_bottom = 0.99
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[b][font_size=23]Interface[/font_size][/b]
+When designing the interface I tried my best to make this program as user friendly as possible, but creating such a piece of software alone brings its downsides in the form of overcomplicating things, thus I feel like a brief tour on what the program interface consists of could be of use.
+
+On startup, you will be greeted by a [b]Start[/b] menu tab (on the right) and an emtpy 3D view (whole screen, partially covered by tabs):
+
+[img width=1000]res://Util/Illustrations/start_screen.png[/img]
+From there you can get access to some guides and information about this program (which, since you are reading this now, you likely already know)
+
+The next tab is the [b]Generation[/b] tab. Here you can control the main generation process - set the size of the grid, choose which of the imported assets should take part in generation and see the process of the currently ongoing generation. When the generation is finished, the [b]Export[/b] option will appear. 
+
+[img width=1000]res://Util/Illustrations/generation_screen.png[/img]
+
+The next tab is the [b]Assets[/b] tab. This tab provides all the necessary controls to import, edit, save and delete assets (imported 3D segments).
+To edit an asset - choose it on the list and its data will populate the fields below. Sockets will be described in the corresponding section of this guide, but for now it is important to take notice of the letters [b]U D F B L R[/b]representing [b]U[/b]p [b]D[/b]own [b]F[/b]ront [b]B[/b]ack [b]L[/b]eft [b]R[/b]ight accordingly.
+Pressing the [b]Import[/b] button will open the file selection promt, and after a file is loaded, the [b]Asset Importer[/b] (in the middle) will apear - it will allow you to input all the data for the newly imported asset as well as provide an overview of the object.
+
+Clicking on the Sockets fields will open the [b]Socket Creator[/b](on the left), which will help you pick/create a correct socket.
+
+[img width=1000]res://Util/Illustrations/assets_screen.png[/img]
+
+The [b]Socket Creator[/b] will display a list of sockets that are being used by current assets. You can choose an existing socket from the list (every asset that uses socket will be displayed above the list). If you need to create a new socket - type it into the text field below the list and press the Save Socket button - the socket will be written to the socket field that was clicked.
+
+The [b]Constraint to[/b] and [b]Constraint from[/b] fields will be described later in this guide.
+
+The next(but not last) tab is the [b]Settings[/b] tab, allowing you to modify the parameters of the generation as well as enable [b]Biomes[/b] - this will introduce a Voronoi tesselation algorithm into the regular WFC which will alow you to generate biome-themed models (for example jungles, snow tundra, desert, etc.)
+
+[img width=1000]res://Util/Illustrations/settings_screen.png[/img]
+
+The [b]Settings[/b] also provide the functionality to enable/disable the display of the entropy value for each cell (disabling that can help improve performance on weaker machines). The Animation Delay slider will control the amount of the Delay between each iteration of the WFC (can be used for visualisation purposes)
+
+When the [b]Biome[/b] button is toggled in the [b]Settings[/b], a new [b]Biomes[/b] tab appears in the tab bar.
+
+[img width=1000]res://Util/Illustrations/biomes_screen.png[/img]
+
+This tab will provide controls over the biomes and the objects assigned to them. To add objects to a biome - select (or create) a biome first, then select all the needed objects on the assets list and then press the [b]Assign[/b] button.
+After that, and given that the [b]Biomes[/b] option is toggled in the [b]Settings[/b], the WFC will use Voronoi tesselation to generate biomes and will pick the biome-assigned blocks accordingly.
+
+[b][font_size=23]Controls[/font_size][/b]
+[p]In the 3D view, you can:
+[ul]
+rotate the camera around the focus point by holding down Left Mouse Button and dragging
+shift the camera by holding down Middle Mouse Button (Mouse Wheel) and dragging
+zoom in/out by scrolling
+go into the first person \"noclip\" mode by holding the Right Mouse Button and dragging to rotate the camera. While in the first person mode, use WASD to fly around the scene.
+[/ul][/p]
+
+To select multiple items on the list (for example on the [b]Generation[/b] tab, hold down CTRL while clicking the desired items. Selection from item A to item B is also possible: hold down SHIFT, select the first item and then, without releasing SHIFT, select the second item.
+
+[b][font_size=23]Sockets[/font_size][/b]
+Understanding sockets is extremely crucial in order to use this program successfully. 
+
+There are many different implementations of the WFC algorithm, and many of them use a unique socket system. Some take note of colors at certain pixels to connect 2D sprites, some use vertex data to decide if a 3D model piece can fit the other one or not. My approach is a bit more crude than that, but may be slightly simpler to control and understand. This program uses [b]strings[/b] -- sets of letters or digits (for example: \"5s\" or \"3r\" or just \"1\" or \"hello_world\") in order to describe a socket. That is cool, but what is a socket? 
+
+The best analogy to use when explaining sockets is puzzles - the ones you put together to get a fancy image.
+
+[img width=850]res://Util/Illustrations/puzzle.jpg[/img]
+
+As you may know, not every puzzle piece will be able to correctly connect with the other one - some will fit, but it will be obvious that something is wrong about the way it is connected. Some puzzles may even connect properly but the colors won't match. The same goes for our case: every segment has to have proper sockets to be able to connect only to the right neighbouring segments. A segment with a socket string of, say \"5\" on the B socket (back) will only be able to connect with a segment that has the same \"5\" string on the F (front) or B(back), given that one of the segments will be rotated by 180 degrees to face the other segment with the correct side.
+
+During the generation, these strings of sockets are used to generate an internal list of every object (actually, every rotation around the UP axis of the object, which will be treated as a separate object from now on), the lists of valid neighbours will be formed based on these socket strings.
+
+While there are almost no limitations to what a socket string can be (can be \"hello\" or \"yellow\" or just \"5\" or \"grass_1\"), there are some socket string endings that should be taken note of:
+[ul]
+[b]S[/b] - if a socket ends in this letter, the algorithm will think of this socket as a [b]symmetrical[/b] one, meaning that no matter how the neighbouring segments are rotated related to each other, they will still be able to connect correctly (well, given that both will have the same socket with the \"S\" on their connecting sides (socket A has a \"S\" socket on its back and socket B has a \"S\" socket on its front too)
+[b]R/L[/b] - these socket endings will tell the algorithm that this side of the object is [b]asymmetrical[/b]. Let's take a look at the example:
+[/ul]
+
+[img width=1000]res://Util/Illustrations/sockets_lr.png[/img]
+
+The presented situation is the following - we are considering possible neighbours for the center \"shore\" block. For the sake of an example, we are looking at only the L and R sockets of the block. As you can see, only L/R sockets only can connect to their opposites - L to R. and vice versa. A connection of L to L (and R to R) is not correct.
+[ul]
+[b]-1[/b] - is an empty block socket. The so called \"empty block\" is generated automatically during the socket-list generation, so there is no need to add one yourself (unless needed).
+[/ul]
+
+[b][font_size=23]Constraints[/font_size][/b]
+As you may have noticed during the [b]Assets[/b] tab and the [b]Asset Importer[/b] walkthrough, there are two fields: [b]Cosntrain from[/b] and [b]Constrain to[/b], and a mysterious [b]Edge block[/b] toggle. These fields help control some of the aspects of the [b]constraints[/b] that help generate the world. 
+
+[b]Constraints[/b] are certain rules that are applied to objects based on their position in the grid, not on their type. For example let's take a look at the so-called [b]XZ constraints[/b](X and Z are the two horizontal axis in Godot). I used the simplest example set that was presented in the [i]How to design 3D models for WFC[/i]
+Here's a world without the [b]XZ constraints[/b]:
+
+[img width=1000]res://Util/Illustrations/terrain_constraint_none.png[/img]
+
+It's pretty cute, but what if we can not have pieces of land be at the edge of the grid? What if we are generating not just islands, but some interiors, dungeons or just something that we want to be sealed. Or maybe we want our terrain generation example produce only islands, so there are only water blocks at the edges? Here's where the [b]XZ constraints[/b] come in handy. Let's toggle the [b]Edge block[/b] option On for the \"water\" block asset. Here's the result:
+
+[img width=1000]res://Util/Illustrations/terrain_constraint_applied.png[/img]
+
+[b]Constraint to[/b] is a constraint that has three options: [b]None[/b], [b]Top[/b] and [b]Bottom[/b]. The first one is obvious - we don't do anything, the [b]Top[/b] one will tell the algorithm that the block can appear only at the top layer of the grid. This can be useful for generating mountains, trees, lanterns, ceilings and such. The [b]Bottom[/b] option will restrict the object only to the bottom layer of the grid. 
+
+[b]Constraint from[/b] has the mentioned above options as well, what it does differently is the restriction: it restricts the object from being at the bottom/top of the grid. So, for [b]Top[/b] option chosen for that parameter, the object will be able to appear everywhere, except the top layer of the grid.
+
+Other than the constraints we can control, there are automatic constraints that prevent objects that don't have a \"-1\" socket on their Up side from appearing in the top layer of the grid, so there is no \"uncapped\" mountains and such.
+A similar constraint is applied to the \"tops\" of the objects, so there is no object that is supposed to have something below at the bottom of the grid.
+
+[b][font_size=23]Weights[/font_size][/b]
+Object weights are pretty straightforward. If you have read the [i]\"What is WFC?\"[/i] you may remember the step where we picked a random object(a random state) from the pool of possible objects for the current grid cell. Well, here is where the weights come into play: the bigger the weight of the object, the higher the chance that it will get chosen from the pool during a random pick, [b]i.e. objects with higher weight will appear more often.[/b]
+
+The object weight can be edited at the [b]Assets[/b] tab.
+
+[b][font_size=23]Biomes[/font_size][/b]
+[b]Biomes[/b] provide a way of adding more diversity to the generated levels. Want the bottom dungeon level to be less mossy and more covered in cobwebs? Want to make a mysterious purple and red world full of weird alien-like landscapes for your level? That is where [b]Biomes[/b] shine.
+To use [b]Biomes[/b], turn the according option on in the [b]Settings[/b] tab. Import all of the object variations (it is better to have every block have its own counterpart in every biome, otherwise the generation might have troubles connecting the biomes together).
+
+[b][font_size=23]Exporting generated models[/font_size][/b]
+Exporting, for now, is done only to [b].gltf/.glb[/b] files, which can be natively imported into Blender. "
 
 [node name="Generation" type="Control" parent="MainMenu/Panel/TabContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 570)
 layout_mode = 2
 theme = ExtResource("1_dsxom")
@@ -81,26 +449,30 @@ offset_bottom = -1.965
 grow_horizontal = 2
 text = "Grid size
 "
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GridSizeX" type="LineEdit" parent="MainMenu/Panel/TabContainer/Generation"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.045
-anchor_right = 1.0
-anchor_bottom = 0.097
+anchor_top = 0.048
+anchor_right = 0.891
+anchor_bottom = 0.067
 offset_left = 10.0
-offset_top = 3.225
-offset_right = -198.0
-offset_bottom = 3.285
+offset_top = 0.714001
+offset_right = -197.76
+offset_bottom = 8.601
 placeholder_text = "X"
 alignment = 1
 
 [node name="GridSizeY" type="LineEdit" parent="MainMenu/Panel/TabContainer/Generation"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.05
-anchor_right = 1.0
-anchor_bottom = 0.097
+anchor_left = 0.059
+anchor_top = 0.048
+anchor_right = 0.951
+anchor_bottom = 0.067
 offset_left = 104.0
 offset_top = 0.25
 offset_right = -104.0
@@ -111,9 +483,10 @@ alignment = 1
 [node name="GridSizeZ" type="LineEdit" parent="MainMenu/Panel/TabContainer/Generation"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.05
+anchor_left = 0.117
+anchor_top = 0.048
 anchor_right = 1.0
-anchor_bottom = 0.097
+anchor_bottom = 0.067
 offset_left = 198.0
 offset_top = 0.25
 offset_right = -10.0
@@ -127,7 +500,7 @@ anchors_preset = -1
 anchor_left = 0.04
 anchor_top = 0.155
 anchor_right = 0.961
-anchor_bottom = 0.504
+anchor_bottom = 0.808
 offset_left = 0.079999
 offset_top = -0.235001
 offset_right = 0.00598145
@@ -139,9 +512,9 @@ select_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.54
-anchor_top = 0.511
+anchor_top = 0.835
 anchor_right = 0.96
-anchor_bottom = 0.563
+anchor_bottom = 0.835
 offset_left = 0.0799866
 offset_top = -0.0450134
 offset_right = -0.0800171
@@ -154,9 +527,9 @@ text = "Select all"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.04
-anchor_top = 0.511
+anchor_top = 0.835
 anchor_right = 0.52
-anchor_bottom = 0.563
+anchor_bottom = 0.835
 offset_left = 0.079999
 offset_top = -0.0450134
 offset_right = 0.0399933
@@ -169,23 +542,26 @@ text = "Deselect all"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.109
+anchor_top = 0.099
 anchor_right = 0.5
-anchor_bottom = 0.109
+anchor_bottom = 0.099
 offset_left = -106.5
 offset_right = 106.5
 offset_bottom = 26.0
 grow_horizontal = 2
 text = "Assets to use in generation:"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CleanUpButton" type="CheckButton" parent="MainMenu/Panel/TabContainer/Generation"]
 visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.239
-anchor_top = 0.625
+anchor_top = 0.899
 anchor_right = 0.773
-anchor_bottom = 0.625
+anchor_bottom = 0.899
 offset_left = -56.0
 offset_top = -31.0
 offset_right = 56.0
@@ -194,17 +570,16 @@ grow_vertical = 0
 text = "Clean up"
 
 [node name="ProgressBar" type="ProgressBar" parent="MainMenu/Panel/TabContainer/Generation"]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.034
-anchor_top = 0.921
+anchor_top = 0.94
 anchor_right = 0.966
-anchor_bottom = 0.921
-offset_left = -0.132001
-offset_top = -25.995
-offset_right = 0.131989
-offset_bottom = 1.005
+anchor_bottom = 0.94
+offset_left = -0.240001
+offset_top = -32.18
+offset_right = 0.23999
+offset_bottom = 0.820007
 grow_horizontal = 2
 grow_vertical = 0
 step = 0.1
@@ -215,9 +590,9 @@ visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.037
-anchor_top = 0.923
+anchor_top = 0.94
 anchor_right = 0.968
-anchor_bottom = 0.923
+anchor_bottom = 0.94
 offset_left = -0.0710154
 offset_top = 0.129944
 offset_right = -0.0710449
@@ -249,6 +624,20 @@ ok_button_text = "Export"
 access = 2
 filters = PackedStringArray("*.gltf", "*.glb")
 
+[node name="StatusLabel" type="Label" parent="MainMenu/Panel/TabContainer/Generation"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.037
+anchor_top = 0.89
+anchor_right = 0.963
+anchor_bottom = 0.89
+offset_top = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Status: Ready"
+label_settings = SubResource("LabelSettings_imfhw")
+vertical_alignment = 1
+
 [node name="Assets" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 custom_minimum_size = Vector2(0, 570)
@@ -259,8 +648,14 @@ script = ExtResource("2_27f4q")
 [node name="ItemList" type="ItemList" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.382
+anchor_left = 0.02
+anchor_top = 0.039
+anchor_right = 0.98
+anchor_bottom = 0.505
+offset_left = -0.2
+offset_top = -0.0830002
+offset_right = 1.19998
+offset_bottom = -0.484985
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -296,28 +691,30 @@ text = "Delete"
 [node name="AddButton" type="Button" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.462
-anchor_right = 1.0
-anchor_bottom = 0.462
-offset_left = 10.0
-offset_right = -10.0
-offset_bottom = -10.0
+anchor_left = 0.029
+anchor_top = 0.527
+anchor_right = 0.983
+anchor_bottom = 0.527
+offset_left = -0.44
+offset_top = -15.019
+offset_right = 0.119995
+offset_bottom = 15.981
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 theme = ExtResource("1_dsxom")
 text = "Import"
 
 [node name="NameEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.4
-anchor_top = 0.499
-anchor_right = 1.0
-anchor_bottom = 0.499
-offset_left = 10.8
-offset_top = -6.34998
-offset_right = -9.0
-offset_bottom = -11.05
+anchor_left = 0.422
+anchor_top = 0.569
+anchor_right = 0.983
+anchor_bottom = 0.569
+offset_left = 0.0800018
+offset_top = -15.493
+offset_right = 0.119995
+offset_bottom = 15.507
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -330,23 +727,24 @@ anchors_preset = -1
 anchor_left = -0.75
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -13.0
+offset_left = 7.66002
+offset_top = -12.5
 offset_right = 103.0
-offset_bottom = 13.0
+offset_bottom = 13.5
 grow_vertical = 2
 text = "Object name:"
 
 [node name="WeightEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.4
-anchor_top = 0.569
-anchor_right = 1.0
-anchor_bottom = 0.58
-offset_left = 10.8
-offset_top = -16.0
-offset_right = -9.0
-offset_bottom = -20.7
+anchor_left = 0.422
+anchor_top = 0.609
+anchor_right = 0.983
+anchor_bottom = 0.609
+offset_left = 0.0800018
+offset_top = -15.373
+offset_right = 0.119995
+offset_bottom = 15.627
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -356,25 +754,25 @@ alignment = 1
 [node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Assets/WeightEdit"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -0.75
 anchor_top = 0.5
+anchor_right = 0.422
 anchor_bottom = 0.5
-offset_left = 1.52588e-05
+offset_left = -143.0
+offset_top = -12.5
+offset_right = 0.22863
+offset_bottom = 13.5
 grow_vertical = 2
 text = "Object weight:"
 
 [node name="BiomeEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 visible = false
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.4
-anchor_top = 0.6
+anchors_preset = 14
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.66
-offset_left = 10.8
-offset_top = 16.0
-offset_right = -9.0
-offset_bottom = 11.3
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -394,13 +792,13 @@ text = "Object biome:"
 [node name="SocketEdit_U" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.774
+anchor_top = 0.845
 anchor_right = 1.0
-anchor_bottom = 0.774
+anchor_bottom = 0.845
 offset_left = 10.0
-offset_top = -14.995
-offset_right = -204.0
-offset_bottom = 16.005
+offset_top = -14.465
+offset_right = -239.0
+offset_bottom = 16.535
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_dsxom")
@@ -427,13 +825,13 @@ vertical_alignment = 1
 [node name="SocketEdit_D" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.749
+anchor_top = 0.827
 anchor_right = 1.0
-anchor_bottom = 0.749
-offset_left = 108.0
-offset_top = -0.120026
-offset_right = -108.0
-offset_bottom = 0.0999756
+anchor_bottom = 0.827
+offset_left = 125.0
+offset_top = -0.119019
+offset_right = -128.0
+offset_bottom = 30.881
 theme = ExtResource("1_dsxom")
 placeholder_text = "D"
 alignment = 1
@@ -457,13 +855,13 @@ vertical_alignment = 1
 [node name="SocketEdit_F" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.749
+anchor_top = 0.827
 anchor_right = 1.0
-anchor_bottom = 0.749
-offset_left = 204.0
-offset_top = -0.120026
-offset_right = -10.0
-offset_bottom = 0.0999756
+anchor_bottom = 0.827
+offset_left = 236.0
+offset_top = -0.119019
+offset_right = -6.0
+offset_bottom = 30.881
 theme = ExtResource("1_dsxom")
 placeholder_text = "F"
 alignment = 1
@@ -487,13 +885,13 @@ vertical_alignment = 1
 [node name="SocketEdit_B" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.858
+anchor_top = 0.903
 anchor_right = 1.0
-anchor_bottom = 0.883
+anchor_bottom = 0.903
 offset_left = 10.0
-offset_top = 0.259949
-offset_right = -204.0
-offset_bottom = -0.0899963
+offset_top = 0.309021
+offset_right = -240.0
+offset_bottom = 31.309
 theme = ExtResource("1_dsxom")
 placeholder_text = "B"
 alignment = 1
@@ -516,13 +914,13 @@ vertical_alignment = 1
 [node name="SocketEdit_L" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.858
+anchor_top = 0.903
 anchor_right = 1.0
-anchor_bottom = 0.883
-offset_left = 108.0
-offset_top = 0.259949
-offset_right = -108.0
-offset_bottom = -0.0899963
+anchor_bottom = 0.903
+offset_left = 125.0
+offset_top = 0.309021
+offset_right = -128.0
+offset_bottom = 31.309
 theme = ExtResource("1_dsxom")
 placeholder_text = "L"
 alignment = 1
@@ -546,13 +944,13 @@ vertical_alignment = 1
 [node name="SocketEdit_R" type="LineEdit" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.858
+anchor_top = 0.903
 anchor_right = 1.0
-anchor_bottom = 0.883
-offset_left = 204.0
-offset_top = 0.259949
-offset_right = -10.0
-offset_bottom = -0.0899963
+anchor_bottom = 0.903
+offset_left = 235.0
+offset_top = 0.309021
+offset_right = -6.0
+offset_bottom = 31.309
 theme = ExtResource("1_dsxom")
 placeholder_text = "R"
 alignment = 1
@@ -577,14 +975,16 @@ vertical_alignment = 1
 [node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.67
+anchor_top = 0.785
 anchor_right = 1.0
-anchor_bottom = 0.716
-offset_left = 15.0
-offset_top = 1.34998
-offset_right = -224.0
-offset_bottom = 1.12997
+anchor_bottom = 0.785
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "Sockets"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
 
 [node name="FileDialog" type="FileDialog" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "Open a File"
@@ -760,6 +1160,20 @@ popup/item_1/id = 1
 popup/item_2/text = "Bottom"
 popup/item_2/id = 2
 
+[node name="EdgeBlockImport" type="CheckBox" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer/LeftPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.059
+anchor_top = 0.868
+anchor_right = 0.956
+anchor_bottom = 0.868
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Edge block"
+alignment = 1
+
 [node name="RightPanel" type="Panel" parent="MainMenu/Panel/TabContainer/Assets/AssetImporter/MarginContainer/Panel/HSplitContainer"]
 layout_mode = 2
 
@@ -877,6 +1291,7 @@ dialog_text = "Are you sure that you want to delete the selected asset? This act
 [node name="FieldDialog" type="AcceptDialog" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "Fields are required"
 initial_position = 5
+size = Vector2i(231, 100)
 always_on_top = true
 popup_window = true
 dialog_text = "All asset fields are required!"
@@ -888,6 +1303,21 @@ size = Vector2i(468, 109)
 always_on_top = true
 dialog_text = "The asset with the same name has already been imported.
 Please choose another asset name."
+
+[node name="NameReserved" type="AcceptDialog" parent="MainMenu/Panel/TabContainer/Assets"]
+title = "The asset name is reserved"
+initial_position = 5
+size = Vector2i(677, 109)
+always_on_top = true
+dialog_text = "This asset name is reserved for internal purposes. Please choose another asset name."
+
+[node name="IllegalChar" type="AcceptDialog" parent="MainMenu/Panel/TabContainer/Assets"]
+title = "Special marks"
+initial_position = 5
+size = Vector2i(677, 109)
+always_on_top = true
+dialog_text = "The asset name can not contain special marks: 
+(#, %, &, {, }, \\, <, >, *, ?, /, $, !, ', \", :, @, +, `, |, =)"
 
 [node name="NotSavedDialog" type="ConfirmationDialog" parent="MainMenu/Panel/TabContainer/Assets"]
 title = "The changes might be lost."
@@ -1068,10 +1498,10 @@ vertical_alignment = 1
 [node name="ConstrainToLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.045
-anchor_top = 0.577
-anchor_right = 0.775
-anchor_bottom = 0.577
+anchor_left = 0.025
+anchor_top = 0.673
+anchor_right = 0.834
+anchor_bottom = 0.674
 offset_left = -0.410001
 offset_top = -0.315002
 offset_right = 50.05
@@ -1083,11 +1513,11 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.636
+anchor_left = 0.528
 anchor_right = 1.0
-offset_left = -35.448
+offset_left = -35.4176
 offset_top = -2.0
-offset_right = 2.0
+offset_right = 3.30002
 offset_bottom = 29.0
 tooltip_text = "Limit this blocks possible position so that it is restricted to selection"
 alignment = 1
@@ -1103,10 +1533,10 @@ popup/item_2/id = 2
 [node name="ConstrainFromLabel" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.045
-anchor_top = 0.637
-anchor_right = 0.86
-anchor_bottom = 0.637
+anchor_left = 0.026
+anchor_top = 0.639
+anchor_right = 0.889
+anchor_bottom = 0.639
 offset_left = -0.410001
 offset_top = -7.01501
 offset_right = 31.72
@@ -1118,14 +1548,11 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.602
-anchor_top = 0.432
-anchor_right = 0.954
-anchor_bottom = 0.432
-offset_left = -30.55
-offset_top = -10.232
-offset_right = 7.64999
-offset_bottom = 20.768
+anchor_left = 0.514
+anchor_right = 0.983
+offset_left = -31.2043
+offset_right = 8.01779
+offset_bottom = 31.0
 tooltip_text = "Limit this blocks possible placements to exclude the selected position"
 alignment = 1
 item_count = 3
@@ -1137,6 +1564,32 @@ popup/item_1/id = 1
 popup/item_2/text = "Bottom"
 popup/item_2/id = 2
 
+[node name="Label2" type="Label" parent="MainMenu/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "Assets:"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EdgeBlock" type="CheckBox" parent="MainMenu/Panel/TabContainer/Assets"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.028
+anchor_top = 0.715
+anchor_right = 0.983
+anchor_bottom = 0.715
+offset_left = -0.0799999
+offset_right = 0.119995
+offset_bottom = 26.611
+grow_horizontal = 2
+grow_vertical = 2
+text = "Edge block"
+alignment = 1
+
 [node name="Biomes" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
 layout_mode = 2
@@ -1146,18 +1599,18 @@ script = ExtResource("6_q8yfc")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.034
-anchor_top = 0.022
+anchor_top = 0.042
 anchor_right = 0.966
-anchor_bottom = 0.372
+anchor_bottom = 0.323
 grow_horizontal = 2
 
 [node name="BiomeEdit" type="LineEdit" parent="MainMenu/Panel/TabContainer/Biomes"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.036
-anchor_top = 0.443
+anchor_top = 0.364
 anchor_right = 0.966
-anchor_bottom = 0.443
+anchor_bottom = 0.364
 offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -1168,9 +1621,9 @@ alignment = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.037
-anchor_top = 0.501
+anchor_top = 0.407
 anchor_right = 0.966
-anchor_bottom = 0.501
+anchor_bottom = 0.407
 offset_top = -8.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -1180,9 +1633,9 @@ text = "Add"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.034
-anchor_top = 0.535
+anchor_top = 0.45
 anchor_right = 0.967
-anchor_bottom = 0.558
+anchor_bottom = 0.45
 offset_top = -8.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -1206,9 +1659,9 @@ text = "Biome color"
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.034
-anchor_top = 0.568
+anchor_top = 0.499
 anchor_right = 0.966
-anchor_bottom = 0.92
+anchor_bottom = 0.94
 grow_horizontal = 2
 grow_vertical = 0
 select_mode = 1
@@ -1224,6 +1677,32 @@ offset_top = -31.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "Assign"
+
+[node name="Label" type="Label" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "Biomes:"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="MainMenu/Panel/TabContainer/Biomes"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.48
+anchor_right = 1.0
+anchor_bottom = 0.48
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Assets:"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Settings" type="Control" parent="MainMenu/Panel/TabContainer"]
 visible = false
@@ -1242,7 +1721,99 @@ grow_horizontal = 2
 text = "Biomes"
 alignment = 1
 
+[node name="EntropyToggle" type="CheckButton" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.069
+anchor_right = 0.99
+anchor_bottom = 0.079
+offset_bottom = 31.0
+grow_horizontal = 2
+tooltip_text = "Displays entropy values for each cell during the generation. Warning: very resource heavy!"
+button_pressed = true
+text = "Display entropy values"
+alignment = 1
+
+[node name="AnimationDelaySlider" type="HSlider" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02
+anchor_top = 0.157
+anchor_right = 0.98
+anchor_bottom = 0.157
+offset_bottom = 16.0
+grow_horizontal = 2
+max_value = 3000.0
+step = 100.0
+rounded = true
+tick_count = 10
+ticks_on_borders = true
+
+[node name="Delay" type="Label" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.117
+anchor_right = 1.0
+anchor_bottom = 0.117
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "Animation delay"
+label_settings = ExtResource("3_gy0om")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.029
+anchor_top = 0.14
+anchor_right = 0.029
+anchor_bottom = 0.14
+offset_top = -13.0
+offset_right = 40.0
+offset_bottom = 13.0
+grow_vertical = 2
+text = "0ms"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.813
+anchor_top = 0.14
+anchor_right = 0.813
+anchor_bottom = 0.14
+offset_top = -13.0
+offset_right = 40.0
+offset_bottom = 13.0
+grow_vertical = 2
+text = "3000ms"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationDelayValue" type="Label" parent="MainMenu/Panel/TabContainer/Settings"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.196
+anchor_right = 1.0
+anchor_bottom = 0.196
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "0.0s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="tab_changed" from="MainMenu/Panel/TabContainer" to="MainMenu/Panel/TabContainer/Generation" method="_on_tab_container_tab_changed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/WFCInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_wfc_info_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/ModelDesign" to="MainMenu/Panel/TabContainer/Start" method="_on_model_design_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/GuideButton" to="MainMenu/Panel/TabContainer/Start" method="_on_guide_button_pressed"]
+[connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/WFCInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_accept_dialog_close_requested"]
+[connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/3DModelInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_d_model_info_close_requested"]
+[connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/Guide" to="MainMenu/Panel/TabContainer/Start" method="_on_guide_close_requested"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Generation/GenerateButton" to="MainMenu/Panel/TabContainer/Generation" method="_on_generate_button_pressed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeX" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_x_text_changed"]
 [connection signal="text_changed" from="MainMenu/Panel/TabContainer/Generation/GridSizeY" to="MainMenu/Panel/TabContainer/Generation" method="_on_grid_size_y_text_changed"]
@@ -1294,8 +1865,11 @@ alignment = 1
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Assets/BiomeEditor/MarginContainer/Panel/SaveButton" to="MainMenu/Panel/TabContainer/Assets/BiomeEditor" method="_on_save_button_pressed"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ConstrainToLabel/ConstraintToSelect" to="MainMenu/Panel/TabContainer/Assets" method="_on_constraint_to_select_item_selected"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Assets/ConstrainFromLabel/ConstraintFromSelect" to="MainMenu/Panel/TabContainer/Assets" method="_on_constraint_from_select_item_selected"]
+[connection signal="toggled" from="MainMenu/Panel/TabContainer/Assets/EdgeBlock" to="MainMenu/Panel/TabContainer/Assets" method="_on_edge_block_toggled"]
 [connection signal="item_selected" from="MainMenu/Panel/TabContainer/Biomes/BiomeList" to="MainMenu/Panel/TabContainer/Biomes" method="_on_biome_list_item_selected"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/AddButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_add_button_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/DeleteButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_delete_button_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Biomes/AssignButton" to="MainMenu/Panel/TabContainer/Biomes" method="_on_assign_button_pressed"]
 [connection signal="toggled" from="MainMenu/Panel/TabContainer/Settings/BiomesToggle" to="MainMenu/Panel/TabContainer/Settings" method="_on_biomes_toggle_toggled"]
+[connection signal="toggled" from="MainMenu/Panel/TabContainer/Settings/EntropyToggle" to="MainMenu/Panel/TabContainer/Settings" method="_on_entropy_toggle_toggled"]
+[connection signal="drag_ended" from="MainMenu/Panel/TabContainer/Settings/AnimationDelaySlider" to="MainMenu/Panel/TabContainer/Settings" method="_on_animation_delay_slider_drag_ended"]

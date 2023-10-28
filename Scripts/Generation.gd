@@ -19,6 +19,8 @@ var result
 
 var assets_controller 
 
+var display_entropy
+
 @onready var progress_bar = $ProgressBar
 @onready var export_button = $ExportButton
 @onready var button = $GenerateButton
@@ -30,6 +32,7 @@ var settings : Settings
 
 var objects = []
 @onready var used_items_list = $UsedAssets 
+@onready var status_label = $StatusLabel
 
 func _ready():
 	var root_node = get_tree().get_root().get_child(0)
@@ -90,6 +93,7 @@ func _on_generate_button_pressed():
 				pool[asset_key] = assets[asset_key]
 				pool[asset_key].biomes = assets[asset_key].biomes
 	var biomes_enabled = settings.biomes
+	display_entropy = settings.display_entropy
 	if wfc == null:
 		wfc = WFC.new()
 	wfc.grid_root = grid_controller
@@ -101,10 +105,16 @@ func _on_generate_button_pressed():
 	wfc.export_button = export_button
 	wfc.generate_button = button
 	wfc.biomes_enabled = biomes_enabled
+	wfc.animation_delay = settings.animation_delay
+
 	if biomes_enabled:
 		wfc.biomes = biomes
+	wfc.display_entropy = display_entropy
+	wfc.status_label = status_label
 	
 	button.set_disabled(true)
+	status_label.visible = true
+	status_label.text = "Initializing WFC..."
 	wfc.initialize(pool)
 	wfc.solve()
 

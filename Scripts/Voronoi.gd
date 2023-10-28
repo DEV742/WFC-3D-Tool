@@ -10,13 +10,21 @@ var grid_x
 var grid_y
 var grid_z
 
-func init(wfc_grid : Array, biomes_dict : Dictionary, grid_size_x : int, grid_size_y : int, grid_size_z : int):
+var display_entropy
+var grid_root
+var qty_protos : int
+
+func init(wfc_grid : Array, biomes_dict : Dictionary, grid_size_x : int, grid_size_y : int, grid_size_z : int, display_ent : bool, gr_root : Node, len_proto : int):
 	grid = wfc_grid
 	biomes = biomes_dict
 	
 	grid_x = grid_size_x
 	grid_y = grid_size_y
 	grid_z = grid_size_z
+	
+	display_entropy = display_ent
+	grid_root = gr_root
+	qty_protos = len_proto
 
 func create_generators():
 	for biome in biomes.keys():
@@ -60,13 +68,17 @@ func restrict():
 			for z in range(grid_z):
 				to_remove.clear()
 				for proto in grid[x][y][z].possibilities:
-					if not proto.biomes.has(grid[x][y][z].biome):
+					if not proto.biomes.has(grid[x][y][z].biome) and proto.asset_name != "Empty block" and not grid[x][y][z].collapsed:
 						to_remove.append(proto)
 				for item in to_remove:
 					grid[x][y][z].possibilities.erase(item)
+					grid[x][y][z].evaluate_entropy()
+					if display_entropy:
+						grid_root.call_deferred("update_label", grid[x][y][z].pos.x, grid[x][y][z].pos.y, grid[x][y][z].pos.z, str(grid[x][y][z].entropy), float(grid[x][y][z].entropy)/float(qty_protos))
+					#grid[x][y][z].update_sockets()
 
 func distance(a : Vector3, b : Vector3):
 	#Euclidean metric
 	var dist : float
-	dist= sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2))
+	dist = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2))
 	return dist
