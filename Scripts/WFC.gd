@@ -121,27 +121,28 @@ func apply_custom_constraints():
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
+								
 				if x == grid_x - 1: # constrain +x
 					for proto in protos.duplicate():
-						if not proto.edge_block:#.valid_neighbours["+X"].has("Empty block"):
+						if not proto.edge_block:
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if x == 0: # constrain -x
 					for proto in protos.duplicate():
-						if not proto.edge_block:#.valid_neighbours["-X"].has("Empty block"):
+						if not proto.edge_block:
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if z == grid_z - 1: # constrain +z
 					for proto in protos.duplicate():
-						if not proto.edge_block:#.valid_neighbours["+Z"].has("Empty block"):
+						if not proto.edge_block:
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
 				if z == 0: # constrain -z
 					for proto in protos.duplicate():
-						if not proto.edge_block:#proto.valid_neighbours["-Z"].has("Empty block"):
+						if not proto.edge_block:
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)

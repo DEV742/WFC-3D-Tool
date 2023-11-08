@@ -1,6 +1,6 @@
 extends Node
 
-@onready var grid = $SubViewportContainer/SubViewport/ModelContainer/Grid
+@onready var grid = $SubViewportContainer/SubViewport/ModelContainer/GridContainer
 @onready var demo_model_container = $SubViewportContainer/SubViewport/ModelContainer/DemoModelContainer
 @onready var blur_layer = $SubViewportContainer/BlurLayer
 @onready var file_flag = $Control/MainMenu/Panel/TabContainer/Assets 
