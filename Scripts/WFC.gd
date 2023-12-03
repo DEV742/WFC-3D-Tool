@@ -16,6 +16,7 @@ var collapsed = 0.0
 var progress_bar : ProgressBar
 var export_button : Button
 var generate_button : Button
+var abort_button : Button
 var status_label : Label
 
 var animation_delay = 0.0
@@ -32,6 +33,9 @@ var display_entropy = false
 
 var voronoi : Voronoi
 var solve_thread : Thread
+
+var is_aborted = false
+var tab_bar
 
 const OPPOSITE_DIRECTIONS = {"+X":"-X", "+Y":"-Y", "+Z":"-Z", "-X":"+X", "-Y":"+Y", "-Z":"+Z"}
 
@@ -50,6 +54,10 @@ func clear_meshes():
 		mesh.queue_free()
 	objects = []
 
+func set_tabs_disabled(value : bool):
+	var count = tab_bar.get_tab_count()
+	for i in range(count):
+		tab_bar.set_tab_disabled(i, value)
 
 func visualize():
 	collapsed = 0
@@ -88,6 +96,8 @@ func apply_custom_constraints():
 	for x in range(grid_x):
 		for y in range(grid_y):
 			for z in range(grid_z):
+				if is_aborted:
+					return
 				blocks_processed += 1
 				progress_bar.call_deferred("set_value", float(float(blocks_processed)/float(total_blocks) * 100))
 				var coords = Vector3(x, y, z)
@@ -121,7 +131,7 @@ func apply_custom_constraints():
 							constrain(grid[x][y][z], proto)
 							if not coords in stack:
 								stack.append(coords)
-								
+
 				if x == grid_x - 1: # constrain +x
 					for proto in protos.duplicate():
 						if not proto.edge_block:
@@ -151,6 +161,7 @@ func apply_custom_constraints():
 
 func solve():
 	clear_meshes()
+	set_tabs_disabled(true)
 	generation_finished = false
 	status_label.text = "Preparing solver thread..."
 	solve_thread = Thread.new()
@@ -168,7 +179,7 @@ func solve_multithreaded():
 		grid = voronoi.solve()
 	
 	status_label.call_deferred("set_text", "Collapsing the Wave Function...")
-	while not is_collapsed():
+	while not is_collapsed() and not is_aborted:
 		await grid_root.get_tree().create_timer(animation_delay/1000).timeout
 		iterate()
 		visualize()
@@ -180,8 +191,16 @@ func solve_multithreaded():
 	progress_bar.call_deferred("set_visible", false)
 	export_button.call_deferred("set_visible", true)
 	generate_button.call_deferred("set_disabled", false)
+	generate_button.call_deferred("set_visible", true)
+	abort_button.call_deferred("set_visible", false)
+	abort_button.call_deferred("set_disabled", true)
 	generation_finished = true
 	status_label.call_deferred("set_text", "Status: Ready")
+	self.call_deferred("set_tabs_disabled", false)
+	
+	if is_aborted:
+		self.call_deferred("clear_meshes")
+		is_aborted = false
 	
 func iterate():
 	var min_ent_cell = get_min_entropy_cell()

@@ -79,10 +79,11 @@ func _init():
 	var biome_array = []
 	for asset in assets.keys():
 		biome_array = []
-		for biome in biomes.keys():
-			if biomes[biome].has(asset):
-				biome_array.append(biome)
-		assets[asset].biomes = biome_array
+		if biomes != null:
+			for biome in biomes.keys():
+				if biomes[biome].has(asset):
+					biome_array.append(biome)
+			assets[asset].biomes = biome_array
 		
 func get_assets():
 	return assets
@@ -99,18 +100,54 @@ func _ready():
 			item_list.add_item(scene_name, assets[scene_name].thumbnail)
 
 func _on_file_dialog_file_selected(path):
-	generated_node = FileWorker.load_gltf(path)
+	file_importer_init(path, false)
+	
+
+func file_importer_init(path = "", web = false, web_node = null):
+	if not web:
+		generated_node = FileWorker.load_gltf(path)
+	else:
+		generated_node = web_node
 	grid.visible = false
 	settings_popup.visible = true
 	enter_demo.emit()
 	set_demo_model.emit(generated_node)
 	imported_asset = AssetBlock.new()
-	
-
 
 func _on_add_button_pressed():
-	file_dialog.visible = true
-	#file dialog fields can be cleared here
+	# use javascript to read to the file system
+	if OS.has_feature("web"):
+		var _ret # generic return value
+		# use global context (true) adding a new JavaScript
+		# global variable – fileData saves me creating a callback
+		_ret = JavaScriptBridge.eval("var fileData = null;", true)
+		print("Create global variable in JS: ", _ret)
+		# open file picker
+		_ret = JavaScriptBridge.eval("pick_file()", true)
+		print("pick_file returned: ", _ret)
+		# give the user 30 seconds to pick the file or time out
+		for _a in range(10):
+		#add a wait
+			var t = Timer.new()
+			t.set_wait_time(3)
+			t.set_one_shot(true)
+			self.add_child(t)
+			t.start()
+			await t.timeout
+			_ret = JavaScriptBridge.eval("fileData;", true)
+			if _ret == null:
+				
+				pass
+			else:
+				t.stop()
+				var node = FileWorker.load_glb_web(_ret)
+				file_importer_init("", true, node)
+				return
+		# show a warning message after 30 seconds
+		JavaScriptBridge.eval("alert('The import time has expired, please try again.');")
+	else:
+		file_dialog.visible = true
+		#file dialog fields can be cleared here
 
 func _on_import_save_button_pressed():
 	var fields_validated = true
@@ -272,10 +309,11 @@ func reload_item_list():
 	var biome_array = []
 	for asset in assets.keys():
 		biome_array = []
-		for biome in biomes.keys():
-			if biomes[biome].has(asset):
-				biome_array.append(biome)
-		assets[asset].biomes = biome_array
+		if biomes != null:
+			for biome in biomes.keys():
+				if biomes[biome].has(asset):
+					biome_array.append(biome)
+			assets[asset].biomes = biome_array
 	
 	for scene_name in assets.keys():
 		item_list.add_item(scene_name, assets[scene_name].thumbnail)

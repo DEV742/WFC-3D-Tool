@@ -5,7 +5,7 @@ extends Node
 @onready var blur_layer = $SubViewportContainer/BlurLayer
 @onready var file_flag = $Control/MainMenu/Panel/TabContainer/Assets 
 @onready var thumbnail_camera = $SubViewportContainer/SubViewport/ModelContainer/DemoModelContainer/Thumbnail/ThumbnailCamera
-
+@onready var generated_container = $SubViewportContainer/SubViewport/ModelContainer/Grid
 
 #This variable enables the model import preview
 var model_demo_mode = false
@@ -14,6 +14,7 @@ var demo_model : Node3D
 func _enter_demo_mode():
 	model_demo_mode = true
 	grid.visible = false
+	generated_container.visible = false
 	blur_layer.visible = true
 
 func _set_demo_model(model : Node3D):
@@ -28,5 +29,6 @@ func _exit_demo_mode():
 	model_demo_mode = false
 	demo_model_container.remove_child(demo_model)
 	grid.visible = true
+	generated_container.visible = true
 	blur_layer.visible = false
 	

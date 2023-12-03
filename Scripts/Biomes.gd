@@ -23,10 +23,11 @@ func update_assets():
 	var biome_array = []
 	for asset in assets.keys():
 		biome_array = []
-		for biome in biomes.keys():
-			if biomes[biome].has(asset):
-				biome_array.append(biome)
-		assets[asset].biomes = biome_array
+		if biomes != null:
+			for biome in biomes.keys():
+				if biomes[biome].has(asset):
+					biome_array.append(biome)
+			assets[asset].biomes = biome_array
 
 func update_asset_list():
 	asset_list.clear()

@@ -24,6 +24,7 @@ var display_entropy
 @onready var progress_bar = $ProgressBar
 @onready var export_button = $ExportButton
 @onready var button = $GenerateButton
+@onready var abort_button = $AbortButton
 
 @onready var export_wizard = $ExportWizard
 var biome_debug_gizmo = preload("res://Util/biome_debug.tscn")
@@ -34,6 +35,8 @@ var objects = []
 @onready var used_items_list = $UsedAssets 
 @onready var status_label = $StatusLabel
 
+var tab_bar
+
 func _ready():
 	var root_node = get_tree().get_root().get_child(0)
 	grid_controller = root_node.find_child("Grid")
@@ -42,6 +45,7 @@ func _ready():
 	settings = get_node("../Settings")
 	self._update_grid.connect(grid_controller.update_grid)
 	assets_controller = get_node("../Assets")
+	tab_bar = get_node("../../TabContainer")
 	
 	assets = assets_controller.assets.duplicate(true)
 	if not assets.is_empty():
@@ -104,8 +108,10 @@ func _on_generate_button_pressed():
 	wfc.progress_bar = progress_bar
 	wfc.export_button = export_button
 	wfc.generate_button = button
+	wfc.abort_button = abort_button
 	wfc.biomes_enabled = biomes_enabled
 	wfc.animation_delay = settings.animation_delay
+	wfc.tab_bar = tab_bar
 
 	if biomes_enabled:
 		wfc.biomes = biomes
@@ -113,7 +119,10 @@ func _on_generate_button_pressed():
 	wfc.status_label = status_label
 	
 	button.set_disabled(true)
+	button.visible = false
 	status_label.visible = true
+	abort_button.visible = true
+	abort_button.set_disabled(false)
 	status_label.text = "Initializing WFC..."
 	wfc.initialize(pool)
 	wfc.solve()
@@ -125,7 +134,18 @@ func _on_clean_up_button_toggled(button_pressed):
 
 func _on_export_button_pressed():
 	if wfc != null and wfc.generation_finished:
-		export_wizard.visible = true
+		if OS.has_feature("web"):
+			# save_data() reads the hex map and saves it as a pipe
+			# delimited string
+			var root_node = grid_controller
+			var scene = prepare_scene(root_node)
+			var bytes = FileWorker.get_buffer_from_scene(scene)
+			#FileWorker.export_scene(scene, "user://export.glb")
+			#var command = "save_file()"
+			#var _ret = JavaScriptBridge.eval(command)
+			JavaScriptBridge.download_buffer(bytes, "export.glb")
+		else:
+			export_wizard.visible = true
 		
 
 
@@ -147,3 +167,7 @@ func _on_export_wizard_file_selected(path):
 	var root_node = grid_controller
 	var scene = prepare_scene(root_node)
 	FileWorker.export_scene(scene, path)
+
+
+func _on_abort_button_pressed():
+	wfc.is_aborted = true

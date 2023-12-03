@@ -1,6 +1,7 @@
 extends Node
 class_name FileWorker
 const asset_path = "user://Imports/"
+
 static func load_gltf(path: String) -> Node:
 	var gltf_state = GLTFState.new()
 	var gltf_doc = GLTFDocument.new()
@@ -16,9 +17,35 @@ static func load_gltf(path: String) -> Node:
 	var generated_node = gltf_doc.generate_scene(gltf_state)
 	return generated_node
 
+static func load_glb_web(bytes : PackedByteArray) -> Node:
+	var gltf_state = GLTFState.new()
+	var gltf_doc = GLTFDocument.new()
+	
+	var error = gltf_doc.append_from_buffer(bytes, "", gltf_state)
+	if error != OK:
+		print("Possible empty or corrupted model")
+	print(gltf_state.get_materials().size())
+	
+	var generated_node = gltf_doc.generate_scene(gltf_state)
+	return generated_node
+	
+
+static func get_buffer_from_scene(scene : Node) -> PackedByteArray:
+	var gltf_state = GLTFState.new()
+	var gltf_document = GLTFDocument.new()
+	
+	gltf_document.append_from_scene(scene, gltf_state)
+	
+	var array = gltf_document.generate_buffer(gltf_state)
+	return array
+
 static func save_scene(scene_name: String, scene: Node) -> String:
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(scene)
+	
+	if not DirAccess.dir_exists_absolute(asset_path):
+		DirAccess.make_dir_absolute(asset_path)
+	
 	var path = asset_path + scene_name + ".tscn"
 	var err = ResourceSaver.save(packed_scene, path)
 	if err != OK:
