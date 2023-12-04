@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://dniry0r343es0"]
+[gd_scene load_steps=17 format=3 uid="uid://dniry0r343es0"]
 
 [ext_resource type="Theme" uid="uid://dna37blibu61" path="res://Themes/dark_default_theme.tres" id="1_dsxom"]
 [ext_resource type="Script" path="res://Scripts/Assets.gd" id="2_27f4q"]
 [ext_resource type="Script" path="res://Scripts/Generation.gd" id="2_lipvx"]
 [ext_resource type="Script" path="res://Scripts/Start.gd" id="2_o0atw"]
 [ext_resource type="LabelSettings" uid="uid://o17uppv38ee0" path="res://Util/label.tres" id="3_gy0om"]
+[ext_resource type="Texture2D" uid="uid://qxi8t77ypfxq" path="res://Util/model_set.png" id="3_p13r3"]
 [ext_resource type="PackedScene" uid="uid://g3ijwfms4ixu" path="res://Scenes/render.tscn" id="4_sa1rd"]
 [ext_resource type="Script" path="res://Scripts/SocketCreator.gd" id="5_1m84e"]
 [ext_resource type="Script" path="res://Scripts/BiomeEditor.gd" id="6_5huri"]
@@ -149,7 +150,6 @@ grow_horizontal = 2
 text = "How to use this program"
 
 [node name="TestSetImportButton" type="Button" parent="MainMenu/Panel/TabContainer/Start/Panel"]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.03
@@ -162,17 +162,19 @@ text = "Import example model set"
 
 [node name="TextureRect" type="TextureRect" parent="MainMenu/Panel/TabContainer/Start/Panel"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
+anchors_preset = -1
+anchor_left = 0.091
+anchor_top = 0.364
+anchor_right = 0.92
+anchor_bottom = 0.705
 offset_left = -20.0
 offset_top = -20.0
 offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("3_p13r3")
+expand_mode = 2
 
 [node name="WFCInfo" type="Window" parent="MainMenu/Panel/TabContainer/Start"]
 title = "What is WFC?"
@@ -1855,6 +1857,7 @@ vertical_alignment = 1
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/WFCInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_wfc_info_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/ModelDesign" to="MainMenu/Panel/TabContainer/Start" method="_on_model_design_pressed"]
 [connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/GuideButton" to="MainMenu/Panel/TabContainer/Start" method="_on_guide_button_pressed"]
+[connection signal="pressed" from="MainMenu/Panel/TabContainer/Start/Panel/TestSetImportButton" to="MainMenu/Panel/TabContainer/Start" method="_on_test_set_import_button_pressed"]
 [connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/WFCInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_accept_dialog_close_requested"]
 [connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/3DModelInfo" to="MainMenu/Panel/TabContainer/Start" method="_on_d_model_info_close_requested"]
 [connection signal="close_requested" from="MainMenu/Panel/TabContainer/Start/Guide" to="MainMenu/Panel/TabContainer/Start" method="_on_guide_close_requested"]

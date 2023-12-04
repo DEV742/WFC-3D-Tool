@@ -95,6 +95,9 @@ func _ready():
 	self.enter_demo.connect(root_node._enter_demo_mode)
 	self.exit_demo.connect(root_node._exit_demo_mode)
 	self.set_demo_model.connect(root_node._set_demo_model)
+	update_assets()
+
+func update_assets():
 	if not assets.is_empty():
 		for scene_name in assets.keys():
 			item_list.add_item(scene_name, assets[scene_name].thumbnail)

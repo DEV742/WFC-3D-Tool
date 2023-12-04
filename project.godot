@@ -27,6 +27,10 @@ window/size/viewport_height=900
 window/size/initial_position_type=0
 window/size/resizable=false
 
+[editor]
+
+export/convert_text_resources_to_binary=false
+
 [input]
 
 Left_Mouse={

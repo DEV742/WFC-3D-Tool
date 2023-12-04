@@ -126,6 +126,39 @@ static func get_assets_list() -> Dictionary:
 	
 	return assets
 
+static func import_test_set() -> void:
+	var dir = DirAccess.open("res://Util/StartSet/")
+	if dir == null:
+		return
+	if not DirAccess.dir_exists_absolute(asset_path):
+		DirAccess.make_dir_absolute(asset_path)
+	var assets = []
+	var files = dir.get_files()
+	var file_name
+	for file in files:
+		file_name = file
+		print(file)
+		assets.append(file_name)
+	
+	for file in assets:
+		var source_path
+		var target_path
+		if OS.has_feature("web"):
+			source_path = "res://Util/StartSet/" + file
+			target_path = asset_path + file
+		else:
+			source_path = "res://Util/StartSet/" + file
+			target_path = asset_path + file
+		copy_from_res(source_path.trim_suffix(".remap"), target_path.trim_suffix("remap"))
+		
+static func copy_from_res(from: String, to: String) -> void:
+	var file_from = ResourceLoader.load(from)
+	var saved = ResourceSaver.save(file_from, to)
+	print("Copying " + from + " to " + to + " : " + str(saved))
+	if saved != OK:
+		print("Error while saving scene")
+		return
+
 static func load_scene(scene_name : String) -> Node:
 	var path = asset_path + scene_name + ".tscn"
 	var node = load(path).instantiate()
